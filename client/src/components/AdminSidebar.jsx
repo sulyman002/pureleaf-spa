@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 const AdminSidebar = () => {
   const location = useLocation();
   return (
-    <aside className="w-70 h-screen flex flex-col shadow border-r border-gray-300 ">
+    <aside className="w-70 h-screen hidden md:flex flex-col shadow border-r border-gray-300 ">
       <div className="flex-1 flex flex-col pt-8 px-5 gap-6">
         <div className="flex items-center gap-4.5 ">
           <p className="flex items-center justify-center bg-[#F0ECEB] rounded-full w-10 h-10 text-base font-500 text-center text-[#5C2E1B] font-medium  ">

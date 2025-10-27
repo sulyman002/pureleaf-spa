@@ -1,11 +1,9 @@
 import React from "react";
 import AdminSidebar from "../components/AdminSidebar";
 
-
 import { Outlet } from "react-router-dom";
+import MobileNav from "../components/MobileNav";
 // import useAppContext from "../context/useAppContext";
-
-
 
 const AdminLayout = () => {
   // const { adminTitle, setAdminTitle } = useAppContext();
@@ -16,10 +14,10 @@ const AdminLayout = () => {
       <div className="flex flex-col md:flex-row h-screen bg-gray-50 ">
         {/* Admin Tabs */}
 
-       <AdminSidebar />
+        <AdminSidebar />
         {/* Mobile nav */}
 
-        {/* <MobileNav /> */}
+        <MobileNav />
 
         {/* <div className="flex-1 flex flex-col overflow-hidden">
           <div className="pt-[48px] hidden md:flex pb-[24px] px-[32px] items-center justify-between bg-white shadow-lg">
