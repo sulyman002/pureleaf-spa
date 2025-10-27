@@ -19,3 +19,27 @@ export const links = [
         path: "/analytics"
     }
 ]
+
+export const tips = [
+    {
+        heading: "File size",
+        desc: "PDFs under 1MB load fastest on mobile devices."
+    },
+    {
+        heading: "Formats",
+        desc: "Supported file types are PDF, JPG, and PNG."
+    },
+    {
+        heading: "Naming",
+        desc: "Use clear menu names like “Breakfast” or “Dinner Specials.”"
+    },
+    {
+        heading: "Updating",
+        desc: "You can replace a menu file anytime - QR codes stay linked."
+    },
+    {
+        heading: "Readability",
+        desc: "Use text that’s at least 12pt for easy reading on mobile."
+    },
+    
+]
