@@ -9,9 +9,13 @@ import {
 import React, { useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { openingHours } from "../../data/data";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Profile = () => {
   const [openHour, setOpenHour] = useState(openingHours[0]);
+  const [value, setValue] = useState("");
+
   return (
     <form className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 pb-4">
@@ -144,8 +148,14 @@ const Profile = () => {
 
               <Listbox.Options className="absolute left-0 top-full mt-2 w-full  bg-white border-gray-200 rounded-lg z-50 shadow">
                 {openingHours.map((item) => (
-                  <Listbox.Option value={item} className="hover:bg-gray-100 rounded-lg cursor-pointer">
-                    <div key={item.id} className=" flex gap-2 rounded-lg py-2.5 px-3.5">
+                  <Listbox.Option
+                    value={item}
+                    className="hover:bg-gray-100 rounded-lg cursor-pointer"
+                  >
+                    <div
+                      key={item.id}
+                      className=" flex gap-2 rounded-lg py-2.5 px-3.5"
+                    >
                       <div className="flex items-center gap-2">
                         <Clock4 size={20} className="text-gray-500" />
                         <p className="text-base text-gray-900 ">(WAT)</p>
@@ -161,7 +171,25 @@ const Profile = () => {
             </Listbox>
           </div>
         </div>
-        
+
+        <div className="w-full max-w-md border-b border-gray-200 pb-4 ">
+          <ReactQuill
+            theme="snow"
+            value={value}
+            onChange={setValue}
+            placeholder="Elegant, touch-free fine dining for guests."
+          />
+        </div>
+      <div className="flex w-full justify-end">
+        <div className="flex items-center gap-3 mt-4">
+          <button className=" text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3.5 px-7 border border-[#E2E8F0] bg-gray-50 ">
+            Cancel
+          </button>
+          <button className=" text-base font-semibold text-white flex items-center justify-center rounded-lg py-3.5 px-7 bg-[#5C2E1B]">
+            Save
+          </button>
+        </div>
+      </div>
       </div>
     </form>
   );
