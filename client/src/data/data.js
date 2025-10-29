@@ -67,3 +67,24 @@ export const settingOptions = [
     path: "/settings/team",
   },
 ];
+
+export const openingHours = [
+    {
+        id: 1,
+        zone: "UTC +0",
+        from: 7,
+        to: 4
+    },
+    {
+        id: 2,
+        zone: "UTC +1",
+        from: 8,
+        to: 5,
+    },
+    {
+        id: 3,
+        zone: "UTC +2",
+        from: 9,
+        to: 6,
+    },
+]
