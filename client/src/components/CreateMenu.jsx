@@ -5,7 +5,7 @@ import useAppContext from "../context/useAppContext";
 const CreateMenu = () => {
   const { setCreateNew } = useAppContext();
   return (
-    <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499] backdrop-blur-xs">
+    <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white w-[644px] rounded-xl flex flex-col gap-2 px-6  py-8">
         <div className="flex items-center justify-between py-6 border-b border-gray-200">
           <p className="font-600 font-semibold text-2xl text-gray-900 ">

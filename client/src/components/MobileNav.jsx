@@ -23,7 +23,7 @@ const MobileNav = () => {
       {/* Mobile Nav display */}
 
       {openNav && (
-        <div className="fixed inset-0 bg-[#34405499] min-h-full flex backdrop-blur-2xl ">
+        <div className="fixed inset-0 bg-[#34405499] min-h-full flex backdrop-blur-2xl z-99 ">
           <div className=" flex flex-col h-screen w-4/5 bg-white">
             <div className="flex-1 flex py-4 px-3 gap-5 flex-col  ">
               <div className="">logo</div>
