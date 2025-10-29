@@ -88,3 +88,7 @@ export const openingHours = [
         to: 6,
     },
 ]
+
+export const filter = [
+  "All", "Food Type", "Drink Type", 
+]
