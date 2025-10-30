@@ -4,14 +4,23 @@ import { useForm } from "react-hook-form";
 
 const Register = () => {
 
-    const { register, handleSubmit, setFocus, setError } = useForm();
+    const { register, handleSubmit, formState: {
+        errors,
+        isSubmitting
+
+    } } = useForm();
+
+    const onSubmit = async (data) => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log(data);
+    }
   return (
     <div
       style={{ backgroundImage: `url(${background_image})` }}
       className="w-full min-h-screen bg-cover flex items-center justify-center"
     >
         <div className="w-full md:w-[480px] mx-6 md:mx-0 rounded-xl px-10 bg-white py-16 shadow backdrop-blur-sm flex items-center justify-center flex-col ">
-            <form className="w-full flex flex-col gap-5" >
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5" >
                 {/* company logo */}
                <div className="flex items-center justify-center">
                  <img src="#" alt="pureleaf-spa-logo" />
@@ -25,28 +34,40 @@ const Register = () => {
                         <label htmlFor="name">
                             Name
                         </label>
-                        <input type="text" {...register("name", { required: true, maxLength: 50 })} placeholder="Enter your name" className="placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 border border-gray-300 " />
+                        <input type="text" {...register("name", { required: true, maxLength: 50 })} placeholder="Enter your name" className={`placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 outline-none border ${errors.name ? "border-red-500" : "border-gray-300"} `} />
+                        {errors.name && <span className="text-red-500 text-[14px]">This field is required</span>}
                     </div>
                     <div className="flex flex-col gap-2 ">
                         <label htmlFor="email">
                             Email
                         </label>
-                        <input type="email" placeholder="Enter your email" className="placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 border border-gray-300 " />
+                        <input {...register("email", {
+                            required: "Email is required. ",
+                            validate: (value) =>{
+                                const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                                return pattern.test(value) || "Please enter a valid email address. ";
+                            },
+                        })} type="email" placeholder="Enter your email" className={`placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 outline-none border ${errors.email ? "border-red-500" : "border-gray-300"} `} />
+                        {errors.email && <span className="text-red-500 text-[14px]">{errors.email.message}</span>}
                     </div>
                     <div className="flex flex-col gap-2 ">
                         <label htmlFor="password">
                             Password
                         </label>
-                        <input type="password" placeholder="Enter your name" className="placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 border border-gray-300 " />
+                        <input {...register("password", {
+                            required: "Password is required. ",
+                            minLength: {
+                                value: 8,
+                                message: "Password must be at least 8 characters. ",
+                            },
+                        })} type="password" placeholder="Enter your name" className={`placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 outline-none border ${errors.password ? "border-red-500" : "border-gray-300"} `}  />
                         {/* will later change dynamically */}
-                        <span className="text-gray-500 text-[14px]">
-                            Must be at least 8 characters.
-                        </span>
+                        {errors.password && <span className="text-red-500 text-[14px]">{errors.password.message}</span>}
                     </div>
                 </div>
                 <div className="flex flex-col w-full gap-4 mt-6">
-                    <button type="submit" className="bg-[#5c2e1b] border border-[#5c2e1b] py-2.5 px-[18px] rounded-lg text-[18px] font-500 leading-6 text-white ">
-                        Create account
+                    <button disabled={isSubmitting} type="submit" className={` border border-[#5c2e1b] py-2.5 px-[18px] rounded-lg text-[18px] font-500 leading-6 text-white cursor-point ${isSubmitting ? "bg-[#5c2e1b] opacity-50 cursor-not-allowed" : " bg-[#5c2e1b] hover:text-whitetransition-all duration-300  "} `} >
+                        {isSubmitting ? "Creating account..." : "Create Account"}
                     </button>
                     {/* login via google */}
                     <button className="flex items-center justify-center gap-3 rounded-lg border border-gray-300 py-2.5  px-4  ">

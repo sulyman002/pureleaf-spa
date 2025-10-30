@@ -15,7 +15,7 @@ const FilledMenu = () => {
         <div className="flex flex-col gap-1 text-sm text-center text-gray-500">
           <p className="text-sm">
             <b className="text-[#5C2E1B] font-500 cursor-pointer">
-              Click to upload
+              Click to upload {" "}
             </b>
             or drag and drop a new menu
           </p>
