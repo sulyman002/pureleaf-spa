@@ -1,6 +1,5 @@
 import { createContext, useState } from "react";
 import { setItem, removeItem, getItem } from "../utils/localStorage";
-import Password from "../pages/SettingPages/Password";
 import { toast } from "sonner";
 
 export const AuthContext = createContext();
@@ -9,7 +8,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => getItem("currentUser") || null);
 
   const login = (email, password) => {
-    const existingUser = JSON.parse(getItem("user")) || [];
+    const usersData = getItem("user");
+    const existingUser = Array.isArray(usersData)
+      ? usersData
+      : usersData
+      ? [usersData]
+      : [];
+
     const foundUser = existingUser.find(
       (user) => user.email === email && user.password === password
     );
@@ -18,6 +23,7 @@ export const AuthProvider = ({ children }) => {
       toast.error("User does not exist. Please sign up.");
       return false;
     }
+
     setItem("currentUser", foundUser);
     setUser(foundUser);
     return true;
@@ -29,7 +35,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signUp = (name, email, password) => {
-    const users = JSON.parse(getItem("user")) || [];
+    const usersData = getItem("user");
+    const users = Array.isArray(usersData)
+      ? usersData
+      : usersData
+      ? [usersData]
+      : [];
+
     const existing = users.find((user) => user.email === email);
 
     if (existing) {
@@ -39,7 +51,8 @@ export const AuthProvider = ({ children }) => {
 
     const newUser = { name, email, password };
     users.push(newUser);
-    setItem("user", users);
+    setItem("user", users); 
+    setItem("currentUser", newUser);
     setUser(newUser);
     return true;
   };

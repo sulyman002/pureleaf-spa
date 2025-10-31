@@ -3,12 +3,16 @@ import { links } from "../data/data";
 import * as Icons from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
+import useAuth from "../context/useAuth.js";
 
 const AdminSidebar = () => {
+  const { logout } = useAuth();
   const location = useLocation();
   const text = "Staffsomething@clear.com";
-  const position = text.indexOf("@")
-  const shortText = text.length > 10 ? text.slice(0, position+1) + "..." : text;
+  const position = text.indexOf("@");
+  const shortText =
+    text.length > 10 ? text.slice(0, position + 1) + "..." : text;
   const [useMenu, setUserMenu] = useState(false);
 
   const handleUSerMenu = () => {
@@ -94,9 +98,7 @@ const AdminSidebar = () => {
                   />
                   <div className="flex flex-col gap-2 text-[14px] ">
                     <p className="text-[#404652] font-500 ">Hotel Staff</p>
-                    <p className="text-[#404652] font-400 ">
-                      {shortText}
-                    </p>
+                    <p className="text-[#404652] font-400 ">{shortText}</p>
                   </div>
                 </div>
               </div>
@@ -107,12 +109,23 @@ const AdminSidebar = () => {
                   <span>Support</span>
                 </div>
                 <Link
-                to="/settings"
-                className="cursor-pointer flex items-center gap-4 font-500 text-base text-gray-700 ">
+                  to="/admin/settings"
+                  className="cursor-pointer flex items-center gap-4 font-500 text-base text-gray-700 "
+                >
                   <Icons.Settings size={22} className="text-gray-500" />
                   <span>Settings</span>
                 </Link>
-                <div className="cursor-pointer flex items-center gap-4 font-500 text-base text-red-700 ">
+                <div
+                  onClick={async () => {
+                    await new Promise((resolve) => {
+                      setTimeout(resolve, 500);
+                    });
+                    logout();
+                    setUserMenu(false);
+                    toast.success("Logged out successfully");
+                  }}
+                  className="cursor-pointer flex items-center gap-4 font-500 text-base text-red-700 "
+                >
                   <Icons.LogOut size={22} className="" />
                   <span>Log out</span>
                 </div>

@@ -4,8 +4,12 @@ import { CgMenuLeftAlt } from "react-icons/cg";
 import { links } from "../data/data";
 import * as Icons from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-
+import useAuth from "../context/useAuth.js";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 const MobileNav = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const location = useLocation();
   const [openNav, setOpenNav] = useState(false);
 
@@ -24,7 +28,7 @@ const MobileNav = () => {
 
       {openNav && (
         <div className="fixed inset-0 bg-[#34405499] min-h-full flex backdrop-blur-2xl z-99 ">
-          <div className=" flex flex-col h-screen w-4/5 bg-white">
+          <div className=" flex flex-col h-screen w-4/5 bg-white transition-all duration-300 ">
             <div className="flex-1 flex py-4 px-3 gap-5 flex-col  ">
               <div className="">logo</div>
               <div className="gap-1">
@@ -34,6 +38,7 @@ const MobileNav = () => {
                     <Link
                       key={index}
                       to={link.path}
+                      onClick={() => setOpenNav(false)}
                       className={`flex items-center py-2.5 px-3 rounded-md gap-3 text-base font-500 transition-colors  ${
                         location.pathname === link.path
                           ? " bg-[#5C2E1B] text-white "
@@ -61,11 +66,27 @@ const MobileNav = () => {
                   <Icons.Settings size={22} className="text-gray-500" />
                   <span>Support</span>
                 </div>
-                <div className="cursor-pointer flex items-center gap-4 font-500 text-base text-gray-700 ">
+                <div
+                  onClick={ () => {
+                    navigate("/admin/settings")
+                    setOpenNav(false);
+                  }}
+                  className="cursor-pointer flex items-center gap-4 font-500 text-base text-gray-700 "
+                >
                   <Icons.Settings size={22} className="text-gray-500" />
                   <span>Settings</span>
                 </div>
-                <div className="cursor-pointer flex items-center gap-4 font-500 text-base text-red-700 ">
+                <div
+                  onClick={async () => {
+                    await new Promise((resolve) => {
+                      setTimeout(resolve, 500);
+                    });
+                    logout();
+                    setOpenNav(false);
+                    toast.success("Logged out successfully");
+                  }}
+                  className="cursor-pointer flex items-center gap-4 font-500 text-base text-red-700 "
+                >
                   <Icons.LogOut size={22} className="" />
                   <span>Log out</span>
                 </div>

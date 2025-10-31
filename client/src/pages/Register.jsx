@@ -8,11 +8,12 @@ import useAppContext from "../context/useAppContext";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/useAuth.js";
 import { getItem } from "../utils/localStorage.js";
+import { toast } from "sonner";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const { userDetails, setUserDetails } = useAppContext();
+  const { userDetails } = useAppContext();
   const {
     register,
     handleSubmit,
@@ -27,24 +28,30 @@ const Register = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const existingUser = getItem("user");
-      const parsedUser = existingUser ? JSON.parse(existingUser) : null;
+      console.log(existingUser);
+
+      console.log(data);
+
+      const foundUser = Array.isArray(existingUser)
+        ? existingUser.find((user) => user.email === data.email)
+        : null;
+      console.log(foundUser);
 
       if (loginState === "Sign In") {
         // Check if user exists before logging in
-        if (!parsedUser || parsedUser.email !== data.email) {
-          setError("root", {
-            message: "User not found. Please sign up first.",
-          });
+        if (!foundUser || foundUser.email !== data.email) {
+          toast.error("User not found. Please sign up first.");
+
           return;
         }
         login(data.email, data.password);
         navigate("/admin/dashboard");
+        toast.success("Logged in successfully!");
       } else {
         // Check if the same email already exists
-        if (parsedUser && parsedUser.email === data.email) {
-          setError("root", {
-            message: "Email already registered. Please sign in instead.",
-          });
+        if (existingUser && existingUser.email === data.email) {
+          toast.error("Email already registered. Please sign in instead.");
+
           return;
         }
         signUp(data.name, data.email, data.password);

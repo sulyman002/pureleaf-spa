@@ -56,15 +56,15 @@ export const resolution = [
 export const settingOptions = [
   {
     name: "Profile",
-    path: "/settings/profile",
+    path: "/admin/settings/profile",
   },
   {
     name: "Password",
-    path: "/settings/password",
+    path: "/admin/settings/password",
   },
   {
     name: "Team",
-    path: "/settings/team",
+    path: "/admin/settings/team",
   },
 ];
 
