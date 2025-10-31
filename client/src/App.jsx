@@ -10,12 +10,21 @@ import Profile from "./pages/SettingPages/Profile.jsx";
 import Password from "./pages/SettingPages/Password.jsx";
 import Team from "./pages/SettingPages/Team.jsx";
 import { Navigate } from "react-router-dom";
+import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
 const App = () => {
   return (
     <Routes>
-      <Route path="register" element={<Register />} />
-      <Route path="/" element={<AdminLayout />}>
+      <Route path="/" element={<Register />} />
+
+      <Route
+        path="admin"
+        element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="menu" element={<Menu />} />
