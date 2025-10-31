@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import background_image from "../assets/background-img.jpg";
 import { useForm } from "react-hook-form";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { FcGoogle } from "react-icons/fc";
+
 
 const Register = () => {
   const {
@@ -28,6 +32,18 @@ const Register = () => {
   const toggleLoginState = () => {
     setLoginState((prev) => (prev === "Sign In" ? "Sign Up" : "Sign In"));
   };
+
+  const registerWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+        const res = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+            headers: {
+                Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+        });
+        console.log(res.data);
+    },
+    onError: () => console.log("Google Sign In Failed"),
+  })
   return (
     <div
       style={{ backgroundImage: `url(${background_image})` }}
@@ -134,8 +150,11 @@ const Register = () => {
               </span>
             )}
             {/* login via google */}
-            <button className="flex items-center justify-center gap-3 rounded-lg border border-gray-300 py-2.5  px-4  ">
-              google button
+            <button
+            onClick={() => registerWithGoogle()}
+            className="flex items-center justify-center gap-3 rounded-lg border border-gray-300 py-2.5  px-4  ">
+              <FcGoogle size={20} />
+              <span>google button</span>
             </button>
           </div>
         </form>
