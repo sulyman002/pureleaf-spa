@@ -61,6 +61,15 @@ const Register = () => {
           },
         }
       );
+
+      const { name, email } = res.data;
+
+      if (loginState === "Sign In") {
+        login(email, "google_oauth");
+      } else {
+        signUp(email, name, "google_oauth");
+      }
+      navigate("/admin/dashboard");
       console.log(res.data);
     },
     onError: () => console.log("Google Sign In Failed"),
