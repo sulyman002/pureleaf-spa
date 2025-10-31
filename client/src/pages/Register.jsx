@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import useAppContext from "../context/useAppContext";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/useAuth.js";
+import { getItem } from "../utils/localStorage.js";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,26 +21,39 @@ const Register = () => {
   } = useForm();
 
   const { login, signUp } = useAuth();
- 
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(data);
-      setUserDetails(data);
-      if (loginState === "Sign In") {
-        login(data.email, data.password);
-      } else {
-        signUp(data.name, data.email, data.password);
-      }
-      navigate("/admin/dashboard");
 
-      throw new Error();
+      const existingUser = getItem("user");
+      const parsedUser = existingUser ? JSON.parse(existingUser) : null;
+
+      if (loginState === "Sign In") {
+        // Check if user exists before logging in
+        if (!parsedUser || parsedUser.email !== data.email) {
+          setError("root", {
+            message: "User not found. Please sign up first.",
+          });
+          return;
+        }
+        login(data.email, data.password);
+        navigate("/admin/dashboard");
+      } else {
+        // Check if the same email already exists
+        if (parsedUser && parsedUser.email === data.email) {
+          setError("root", {
+            message: "Email already registered. Please sign in instead.",
+          });
+          return;
+        }
+        signUp(data.name, data.email, data.password);
+        navigate("/admin/dashboard");
+      }
     } catch (error) {
       console.error(error);
       setError("root", {
-        message:
-          " Email is already in use. Please use a different email address.",
+        message: "Something went wrong. Please try again.",
       });
     }
   };
@@ -76,7 +90,6 @@ const Register = () => {
   });
 
   console.log(userDetails);
-  
 
   return (
     <div
