@@ -94,8 +94,8 @@ const AdminSidebar = () => {
           <Icons.EllipsisVertical size={20} className="text-gray-600" />
 
           {useMenu && (
-            <div className="px-5 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 ">
-              <div className="flex py-4 border-t border-gray-200">
+            <div className="px-5 gap-3 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 ">
+              <div className="flex ">
                 <div className="flex-1 flex items-center gap-3 ">
                   <img
                     src=""

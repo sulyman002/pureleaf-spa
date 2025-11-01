@@ -4,17 +4,27 @@ import emptyState from "../assets/emptyState.png";
 import useAppContext from "../context/useAppContext";
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import CreateMenu from "./CreateMenu";
+
 // import QrUpdate from "../components/QrUpdate";
 
 const EmptyMenu = () => {
   const [open, setOpen] = useState(false);
-  const { setCreateNew, createNew } = useAppContext();
+  const { setCreateNew, createNew, setUploadFile, uploadFile } =
+    useAppContext();
   const handleOpen = () => {
     setOpen(!open);
   };
   const handleCreateNew = () => {
     setCreateNew(!createNew);
   };
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    setUploadFile(file);
+  };
+
+  
+
   return (
     <div className="flex items-center justify-center gap-3 flex-col">
       <div className="">
@@ -28,18 +38,28 @@ const EmptyMenu = () => {
         </p>
       </div>
       <div className="flex items-center gap-3 mt-12">
-        <button
-          onClick={handleCreateNew}
-          className="text-base font-semibold flex items-center justify-center py-3.5 px-7 rounded-lg gap-2.5 text-white bg-[#5C2E1B] "
-        >
-          <Plus size={20} />
-          <span>Upload my first menu</span>
-        </button>
+        <div className="flex flex-col items-start gap-2">
+          {/* Hidden input */}
+          <input
+            type="file"
+            id="file"
+            className="hidden"
+            accept="application/pdf"
+            onChange={handleFileUpload}
+          />
+
+          {/* Custom upload button */}
+          <label
+            htmlFor="file"
+            className="flex items-center gap-2.5 px-7 py-3.5 rounded-lg text-white text-base font-semibold bg-[#5C2E1B] cursor-pointer hover:bg-[#4a2414] transition"
+          >
+            <Plus size={20} />
+            Upload my first menu
+          </label>
+        </div>
         {/* display create menu */}
-        {/* {createNew && (
-        
-          <QrUpdate />
-        )} */}
+
+        {uploadFile && <CreateMenu />}
 
         <div className="relative group inline-block">
           <button

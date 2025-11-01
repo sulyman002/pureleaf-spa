@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const pureLeafUrl = import.meta.env.VITE_BASEURL || "https://api.freeapi.app/api/v1/kitchen-sink/http-methods
-";
+const pureLeafUrl = import.meta.env.VITE_BASEURL || "https://api.freeapi.app/api/v1/kitchen-sink/http-methods";
+
 
 
 // read all data
@@ -61,8 +61,8 @@ export const useUpdateData = () => {
     const client = useQueryClient();
 
     return useMutation({
-        mutationFn: async (data_id, ...data) => {
-            const response = await axios.put(`${pureLeafUrl}/${data_id}`, data, {
+        mutationFn: async (data_id, updatedData) => {
+            const response = await axios.put(`${pureLeafUrl}/${data_id}`, updatedData, {
                 headers: {
                     'Content-Type': 'application/json',
                     accept: 'application/json',
@@ -100,6 +100,6 @@ export const useDeleteData = () => {
         },
         onError: (error) => {
             console.error("Error deleting data:", error);
-        }
-    })
-}
+        },
+    });
+};

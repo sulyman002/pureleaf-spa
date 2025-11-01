@@ -9,8 +9,8 @@ import Delete from "../components/Delete";
 
 // import Qr from "../components/Qr";
 import { Search } from "lucide-react";
-// import EmptyMenu from "../components/EmptyMenu";
-import FilledMenu from "../components/FilledMenu";
+import EmptyMenu from "../components/EmptyMenu";
+// import FilledMenu from "../components/FilledMenu";
 
 const Menu = () => {
 
@@ -38,8 +38,8 @@ const Menu = () => {
         </div>
       </div>
       {/* Empty menu */}
-      {/* <EmptyMenu /> */}
-      <FilledMenu />
+      <EmptyMenu />
+      {/* <FilledMenu /> */}
       
     </div>
   );
