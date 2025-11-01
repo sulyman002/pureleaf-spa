@@ -5,12 +5,20 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
 import useAuth from "../context/useAuth.js";
+import useAppContext from "../context/useAppContext.js";
+import { getItem } from "../utils/localStorage.js";
 
 const AdminSidebar = () => {
+
+  const usersData = getItem("currentUser");
+  console.log(usersData? usersData.email : "");
+  
+  const {loginDetails} = useAppContext() 
   const { logout } = useAuth();
   const location = useLocation();
-  const text = "Staffsomething@clear.com";
+  const text = usersData? usersData.email : "";
   const position = text.indexOf("@");
+  
   const shortText =
     text.length > 10 ? text.slice(0, position + 1) + "..." : text;
   const [useMenu, setUserMenu] = useState(false);
@@ -74,7 +82,7 @@ const AdminSidebar = () => {
             className="rounded-full"
           />
           <div className="flex flex-col gap-2 text-[14px] ">
-            <p className="text-[#404652] font-500 ">Hotel Staff</p>
+            <p className="text-[#404652] font-500 ">{usersData?.name}</p>
             <p className="text-[#404652] font-400">{shortText}</p>
           </div>
         </div>
@@ -97,13 +105,13 @@ const AdminSidebar = () => {
                     className="rounded-full"
                   />
                   <div className="flex flex-col gap-2 text-[14px] ">
-                    <p className="text-[#404652] font-500 ">Hotel Staff</p>
+                    <p className="text-[#404652] font-500 ">{usersData?.name}</p>
                     <p className="text-[#404652] font-400 ">{shortText}</p>
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-col px-5 gap-2">
+              <div className="flex flex-col gap-3 w-ful">
                 <div className="cursor-pointer flex items-center gap-4 font-500 text-base text-gray-700 ">
                   <Icons.Settings size={22} className="text-gray-500" />
                   <span>Support</span>

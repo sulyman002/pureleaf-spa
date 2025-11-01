@@ -13,7 +13,7 @@ import { toast } from "sonner";
 const Register = () => {
   const navigate = useNavigate();
 
-  const { userDetails } = useAppContext();
+  const { userDetails, setLoginDetails } = useAppContext();
   const {
     register,
     handleSubmit,
@@ -35,7 +35,8 @@ const Register = () => {
       const foundUser = Array.isArray(existingUser)
         ? existingUser.find((user) => user.email === data.email)
         : null;
-      console.log(foundUser);
+      console.log('this is personal data:', foundUser);
+      setLoginDetails(foundUser);
 
       if (loginState === "Sign In") {
         // Check if user exists before logging in
