@@ -5,12 +5,13 @@ import useAppContext from "../context/useAppContext";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import CreateMenu from "./CreateMenu";
+import { toast } from "sonner";
 
 // import QrUpdate from "../components/QrUpdate";
 
 const EmptyMenu = () => {
   const [open, setOpen] = useState(false);
-  const { setCreateNew, createNew, setUploadFile, uploadFile } =
+  const { setCreateNew, createNew, setUploadFile, uploadFile, uploadToServer } =
     useAppContext();
   const handleOpen = () => {
     setOpen(!open);
@@ -18,12 +19,20 @@ const EmptyMenu = () => {
   const handleCreateNew = () => {
     setCreateNew(!createNew);
   };
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    setUploadFile(file);
-  };
+const handleFileUpload = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-  
+  const isPDF = file.type === "application/pdf"; 
+
+  if (isPDF) {
+    setUploadFile(file);
+    uploadToServer(file);
+
+  } else {
+    toast.error("Please upload a valid PDF file.");
+  }
+};
 
   return (
     <div className="flex items-center justify-center gap-3 flex-col">
