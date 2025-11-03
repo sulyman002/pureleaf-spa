@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createContext, useState } from "react";
+import { toast } from "sonner";
 
 export const AppContext = createContext({});
 
@@ -11,6 +12,8 @@ export const AppProvider = ({children}) => {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
+
+
 
   const uploadToServer = async (file) => {
   if (!file) return;
@@ -46,6 +49,21 @@ export const AppProvider = ({children}) => {
 //     }
 //   }
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const isPDF = file.type === "application/pdf"; 
+  
+    if (isPDF) {
+      setUploadFile(file);
+      uploadToServer(file);
+  
+    } else {
+      toast.error("Please upload a valid PDF file.");
+    }
+  };
+
 
   const store = {
     createNew,
@@ -60,7 +78,8 @@ export const AppProvider = ({children}) => {
     setUploadStatus,
     uploadStatus,
     setUploadProgress,
-    uploadProgress
+    uploadProgress,
+    handleFileUpload
     
   }
 

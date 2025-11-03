@@ -4,8 +4,14 @@ import useAppContext from "../context/useAppContext";
 import axios from "axios";
 
 const CreateMenu = () => {
-  const { setCreateNew, uploadFile, uploadProgress, uploadStatus } =
-    useAppContext();
+  const {
+    setCreateNew,
+    uploadFile,
+    uploadProgress,
+    uploadStatus,
+    handleFileUpload,
+    setUploadFile,
+  } = useAppContext();
 
   const formData = new FormData();
 
@@ -57,9 +63,7 @@ const CreateMenu = () => {
                 <div className="flex gap-1 flex-col w-full">
                   {/* name and size */}
                   <div className="text-gray-700 text-sm font-500">
-                    <span>
-                      {uploadFile.name}
-                    </span>
+                    <span>{uploadFile.name}</span>
                     <br />
                     <span className="text-gray-500 font-400">
                       {Math.round(uploadFile.size / 1024)} KB
@@ -68,22 +72,51 @@ const CreateMenu = () => {
                   {/* tracker line and change image icon */}
                   <div className="w-full flex items-center gap-3 py-1">
                     <div className="h-2 rounded-full w-full bg-[#F9F5FF] ">
-                      <div className="h-2 rounded-full bg-[#5C2E1B] transition-all"
-                      style={{width: `${uploadProgress}%`}}></div>
+                      <div
+                        className="h-2 rounded-full bg-[#5C2E1B] transition-all"
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
                     </div>
-                    <p className="text-sm font-500 text-gray-700">{uploadProgress}%</p>
+                    <p className="text-sm font-500 text-gray-700">
+                      {uploadProgress}%
+                    </p>
                   </div>
-                  <div className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm ">
-                    <RotateCw size={16} className="" />
-                    <span>Replace image</span>
+                  
+
+                  <div
+                    onClick={() => {
+                      setUploadFile("");
+                    }}
+                    className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
+                  >
+                    {/* Hidden input */}
+                    <input
+                      type="file"
+                      id="file"
+                      className="hidden"
+                      accept="application/pdf"
+                      onChange={handleFileUpload}
+                    />
+
+                    {/* Custom upload button */}
+                    <label htmlFor="file">
+                      <RotateCw size={16} className="" />
+                      <span>Replace image</span>
+                    </label>
                   </div>
                 </div>
               </div>
 
               {/* trash */}
               <div className="">
-                 
-               {uploadProgress === 100 ? <CircleCheck size={16} className="text-[#5C2E1B] " /> : <Trash2 size={20} className="cursor-pointer text-gray-500 hover:text-red-500 transition" />}
+                {uploadProgress === 100 ? (
+                  <CircleCheck size={16} className="text-[#5C2E1B] " />
+                ) : (
+                  <Trash2
+                    size={20}
+                    className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                  />
+                )}
               </div>
             </div>
           </div>
