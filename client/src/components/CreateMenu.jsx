@@ -11,11 +11,14 @@ const CreateMenu = () => {
     uploadStatus,
     handleFileUpload,
     setUploadFile,
+    setUploadProgress
   } = useAppContext();
 
   const formData = new FormData();
 
   formData.append("file", uploadFile);
+
+  const fileInputId = "file-" + Math.random().toString(36).substring(2, 8);
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -86,21 +89,24 @@ const CreateMenu = () => {
                   <div
                     onClick={() => {
                       setUploadFile("");
+                      setUploadProgress(0);
+                      
+                      document.getElementById(fileInputId).value = "";
                     }}
-                    className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
+                    
                   >
                     {/* Hidden input */}
                     <input
                       type="file"
-                      id="file"
+                      id={fileInputId}
                       className="hidden"
                       accept="application/pdf"
                       onChange={handleFileUpload}
                     />
 
                     {/* Custom upload button */}
-                    <label htmlFor="file">
-                      <RotateCw size={16} className="" />
+                    <label htmlFor={fileInputId} className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm ">
+                      <RotateCw size={16}  />
                       <span>Replace image</span>
                     </label>
                   </div>

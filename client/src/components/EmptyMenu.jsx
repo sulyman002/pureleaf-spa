@@ -11,14 +11,14 @@ import CreateMenu from "./CreateMenu";
 
 const EmptyMenu = () => {
   const [open, setOpen] = useState(false);
-  const { setCreateNew, createNew,  uploadFile, handleFileUpload } =
+  const { setCreateNew, createNew,  handleFileUpload } =
     useAppContext();
   const handleOpen = () => {
     setOpen(!open);
   };
-  const handleCreateNew = () => {
-    setCreateNew(!createNew);
-  };
+  
+
+   const fileInputId = "file-" + Math.random().toString(36).substring(2, 8);
 
 
   return (
@@ -38,15 +38,18 @@ const EmptyMenu = () => {
           {/* Hidden input */}
           <input
             type="file"
-            id="file"
+            id={fileInputId}
             className="hidden"
             accept="application/pdf"
-            onChange={handleFileUpload}
+            onChange={(e) => {
+              handleFileUpload(e);
+              setCreateNew(true);
+            }}
           />
 
           {/* Custom upload button */}
           <label
-            htmlFor="file"
+            htmlFor={fileInputId}
             className="flex items-center gap-2.5 px-7 py-3.5 rounded-lg text-white text-base font-semibold bg-[#5C2E1B] cursor-pointer hover:bg-[#4a2414] transition"
           >
             <Plus size={20} />
@@ -55,7 +58,7 @@ const EmptyMenu = () => {
         </div>
         {/* display create menu */}
 
-        {uploadFile && <CreateMenu />}
+        {createNew && <CreateMenu />}
 
         <div className="relative group inline-block">
           <button
