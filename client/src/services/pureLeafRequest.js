@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const pureLeafUrl = import.meta.env.VITE_BASEURL || "https://api.freeapi.app/api/v1/kitchen-sink/http-methods";
+const pureLeafUrl = import.meta.env.VITE_BASEURL || "https://6909dc5c1a446bb9cc205352.mockapi.io/pureleaf/v1";
 
 
 
@@ -12,7 +12,7 @@ export const useFilledData = () => {
         queryKey: ['filledData'],
         queryFn: async () => {
          
-                const response = await axios.get(`${pureLeafUrl}/get`, {
+                const response = await axios.get(`${pureLeafUrl}/crud`, {
                     headers: {
                         accept: 'application/json',
                     },

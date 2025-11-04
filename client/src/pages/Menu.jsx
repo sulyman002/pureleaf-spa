@@ -10,9 +10,14 @@ import Delete from "../components/Delete";
 // import Qr from "../components/Qr";
 import { Search } from "lucide-react";
 import EmptyMenu from "../components/EmptyMenu";
-// import FilledMenu from "../components/FilledMenu";
+import { useFilledData } from "../services/pureLeafRequest";
+import FilledMenu from "../components/FilledMenu";
 
 const Menu = () => {
+
+  const { data: cardData } = useFilledData();
+  const data = cardData || [];
+
 
 
  
@@ -38,8 +43,8 @@ const Menu = () => {
         </div>
       </div>
       {/* Empty menu */}
-      <EmptyMenu />
-      {/* <FilledMenu /> */}
+      {data.length === 0 ? <EmptyMenu /> :  <FilledMenu />}
+     
       
     </div>
   );

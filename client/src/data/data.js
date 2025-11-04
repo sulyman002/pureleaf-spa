@@ -90,5 +90,5 @@ export const openingHours = [
 ]
 
 export const filter = [
-  "All", "Food Type", "Drink Type", 
+  "All", "Food Type", "Drink Type", "Event"
 ]

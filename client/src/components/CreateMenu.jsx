@@ -1,9 +1,15 @@
 import { CircleCheck, RotateCw, Trash2, X } from "lucide-react";
 import React from "react";
 import useAppContext from "../context/useAppContext";
-import axios from "axios";
+import { useFilledData } from "../services/pureLeafRequest";
 
 const CreateMenu = () => {
+  const  { data: cardData } = useFilledData();
+  const data = cardData || [];
+
+  console.log(data);
+  
+
   const {
     setCreateNew,
     uploadFile,
@@ -129,7 +135,11 @@ const CreateMenu = () => {
         </form>
 
         <div className="flex items-center w-full gap-3">
-          <button className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 ">
+          <button onClick={() => {
+            setCreateNew(false);
+            setUploadFile("");
+
+          }} className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 ">
             Cancel
           </button>
           <button className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]">
