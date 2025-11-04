@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { createContext, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +12,8 @@ export const AppProvider = ({children}) => {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
+  const [selectedDeleteData, setSelectedDeleteData] = useState(null);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
 
 
@@ -64,6 +66,10 @@ export const AppProvider = ({children}) => {
     }
   };
 
+   const handleToggleDeleteModal = () => {
+    setOpenDeleteModal(!openDeleteModal);
+  };
+
 
   const store = {
     createNew,
@@ -79,7 +85,12 @@ export const AppProvider = ({children}) => {
     uploadStatus,
     setUploadProgress,
     uploadProgress,
-    handleFileUpload
+    handleFileUpload,
+    setSelectedDeleteData,
+    selectedDeleteData,
+    setOpenDeleteModal,
+    openDeleteModal,
+    handleToggleDeleteModal
     
   }
 

@@ -7,15 +7,42 @@ import {
   Trash2,
   Utensils,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { filter } from "../data/data";
 import { useFilledData } from "../services/pureLeafRequest";
+import Delete from "../components/Delete.jsx";
+import useAppContext from "../context/useAppContext";
 
 const FilledMenu = () => {
+  const [filterBy, setFilterBy] = useState(filter[0]);
+  const [cols, setCols] = useState(5);
+  const { setSelectedDeleteData, openDeleteModal, handleToggleDeleteModal } =
+    useAppContext();
+
+  
+
   const { data: cardData } = useFilledData();
   const pureLeafData = cardData || [];
 
-  const [filterBy, setFilterBy] = useState(filter[0]);
+  const filterData =
+    filterBy === "All"
+      ? pureLeafData
+      : pureLeafData.filter((item) => item.category === filterBy);
+
+  useEffect(() => {
+    const updateCols = () => {
+      if (window.innerWidth < 640) setCols(1);
+      else if (window.innerWidth < 760) setCols(2);
+      else if (window.innerWidth < 1024) setCols(3);
+      else setCols(4);
+    };
+    updateCols();
+
+    window.addEventListener("resize", updateCols);
+
+    return () => window.removeEventListener("resize", updateCols);
+  }, []);
+
   return (
     <div className="flex flex-col gap-6 py-5 ">
       {/* upload section */}
@@ -79,53 +106,71 @@ const FilledMenu = () => {
       </div>
 
       {/* cards and pagination */}
-      <div className="px-4 md:px-8 grid md:grid-cols-2 lg:grid-cols-5 gap-y-8 gap-x-6 ">
+      <div className="px-4 md:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-10 gap-x-5 ">
         {/* Data dynamic render here */}
-        {pureLeafData.map((data, index) => (
-          <div key={index} className=" p-4.5  flex flex-col gap-3.5 rounded-xl bg-[#FBFAF9] border border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 ">
-            <div className="flex flex-col gap-3 w-full ">
-              <div className="flex items-center justify-between ">
-                <div className="h-6 w-6 rounded-md border border-[#5C2E1B] p-1 flex items-center justify-center ">
-                  <Utensils size={16} />
-                </div>
-                <div className="">
-                  <Trash2 size={16} className="text-[#667085] font-semibold" />
-                </div>
-              </div>
-              {/* Movie night */}
-              <div className="flex flex-col gap-2">
-                <p className="font-600 font-semibold text-sm text-gray-900 ">
-                  {data.name}
-                </p>
-                <div className="flex items-center gap-1 text-xs text-gray-500 font-400 ">
-                  <span>PDF</span>
-                  <div className="flex items-center gap-1">
-                    <span className="h-2 w-2 rounded-full bg-gray-500"></span>
-                    <span className="">OCT 5, 2025</span>
+        {filterData.map((data, index) => (
+          <React.Fragment key={index}>
+            <div className=" p-4.5  flex flex-col gap-3.5 rounded-xl bg-[#FBFAF9] border border-gray-200 shadow-md hover:shadow-2xl transition-all duration-300 mb-10 ">
+              <div className="flex flex-col gap-3 w-full ">
+                <div className="flex items-center justify-between ">
+                  <div className="h-6 w-6 rounded-md border border-[#5C2E1B] p-1 flex items-center justify-center ">
+                    <Utensils size={16} />
                   </div>
-                  <div className="flex items-center gap-1">
-                    <span className="h-2 w-2 rounded-full bg-gray-500"></span>
-                    <span className="">0.4MB</span>
+                  <div
+                    onClick={() => {
+                      handleToggleDeleteModal();
+                      setSelectedDeleteData(data);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <Trash2
+                      size={16}
+                      className="text-[#667085] font-semibold"
+                    />
+                  </div>
+                  {openDeleteModal && <Delete />}
+                </div>
+                {/* Movie night */}
+                <div className="flex flex-col gap-2">
+                  <p className="font-600 font-semibold text-sm text-gray-900 ">
+                    {data.name}
+                  </p>
+                  <div className="flex items-center gap-1 text-xs text-gray-500 font-400 ">
+                    <span>PDF</span>
+                    <div className="flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-gray-500"></span>
+                      <span className="">OCT 5, 2025</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="h-2 w-2 rounded-full bg-gray-500"></span>
+                      <span className="">0.4MB</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            {/* buttons */}
-            <div className="w-full flex items-center gap-2">
-              <div className="py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
-                <Eye size={16} />
-                <span className="text-sm font-400 ">View</span>
-              </div>
+              {/* buttons */}
+              <div className="w-full flex items-center gap-2">
+                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
+                  <Eye size={16} />
+                  <span className="text-sm font-400 ">View</span>
+                </div>
 
-              <div className="py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
-                <SquarePen size={16} />
-                <span className="text-sm font-400 ">View</span>
-              </div>
-              <div className="py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center ">
-                QR
+                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
+                  <SquarePen size={16} />
+                  <span className="text-sm font-400 ">Edit </span>
+                </div>
+                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center ">
+                  QR
+                </div>
               </div>
             </div>
-          </div>
+
+            {(index + 1) % cols === 0 && (
+              <div className={`col-span-${cols}`}>
+                <hr className="my-4 border-gray-300" />
+              </div>
+            )}
+          </React.Fragment>
         ))}
       </div>
     </div>

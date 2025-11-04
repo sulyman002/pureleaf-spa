@@ -61,8 +61,8 @@ export const useUpdateData = () => {
     const client = useQueryClient();
 
     return useMutation({
-        mutationFn: async (data_id, updatedData) => {
-            const response = await axios.put(`${pureLeafUrl}/${data_id}`, updatedData, {
+        mutationFn: async (id, updatedData) => {
+            const response = await axios.put(`${pureLeafUrl}/${id}`, updatedData, {
                 headers: {
                     'Content-Type': 'application/json',
                     accept: 'application/json',
@@ -87,8 +87,8 @@ export const useDeleteData = () => {
     const client = useQueryClient();
 
     return useMutation({
-        mutationFn: async (data_id) => {
-            const response = await axios.delete(`${pureLeafUrl}/${data_id}`, {
+        mutationFn: async (id) => {
+            const response = await axios.delete(`${pureLeafUrl}/crud/${id}`, {
                 headers: {
                     accept: 'application/json',
                 },
