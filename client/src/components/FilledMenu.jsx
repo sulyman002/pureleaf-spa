@@ -12,14 +12,18 @@ import { filter } from "../data/data";
 import { useFilledData } from "../services/pureLeafRequest";
 import Delete from "../components/Delete.jsx";
 import useAppContext from "../context/useAppContext";
+import Edit from "../components/Edit.jsx"
 
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
   const [cols, setCols] = useState(5);
-  const { setSelectedDeleteData, openDeleteModal, handleToggleDeleteModal } =
-    useAppContext();
-
-  
+  const {
+    setSelectedDeleteData,
+    openDeleteModal,
+    handleToggleDeleteModal,
+    handleToggleEditModal,
+    openEditModal
+  } = useAppContext();
 
   const { data: cardData } = useFilledData();
   const pureLeafData = cardData || [];
@@ -155,10 +159,19 @@ const FilledMenu = () => {
                   <span className="text-sm font-400 ">View</span>
                 </div>
 
-                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
+                <div
+                  onClick={() => {
+                    handleToggleEditModal();
+                  }}
+                  className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] "
+                >
                   <SquarePen size={16} />
                   <span className="text-sm font-400 ">Edit </span>
                 </div>
+                {openEditModal && (
+                    <Edit />
+                )}
+
                 <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center ">
                   QR
                 </div>
