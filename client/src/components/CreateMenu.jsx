@@ -1,30 +1,86 @@
-import { CircleCheck, RotateCw, Trash2, X } from "lucide-react";
-import React from "react";
+import { ChevronDown, CircleCheck, RotateCw, Trash2, X } from "lucide-react";
+import React, { useState } from "react";
 import useAppContext from "../context/useAppContext";
-import { useFilledData } from "../services/pureLeafRequest";
+import { useFilledData, useCreateData } from "../services/pureLeafRequest";
+import { Listbox } from "@headlessui/react";
+import { locations } from "../data/data";
+import { toast } from "sonner";
 
 const CreateMenu = () => {
-  const  { data: cardData } = useFilledData();
+  const { data: cardData } = useFilledData();
+  const { mutate: createData } = useCreateData();
+  const [location, setLocation] = useState(locations[0]);
+  const fileInputId = "file-" + Math.random().toString(36).substring(2, 8);
+  const [fieldData, setFieldData] = useState({
+    name: "",
+    location: "",
+    file: "",
+  });
+
+  const uploadedFile = fieldData?.file;
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "file") {
+      setFieldData((prev) => ({
+        ...prev,
+        [name]: files[0],
+      }));
+    } else {
+      setFieldData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
   const data = cardData || [];
 
   console.log(data);
-  
 
   const {
     setCreateNew,
-    uploadFile,
     uploadProgress,
     uploadStatus,
     handleFileUpload,
     setUploadFile,
-    setUploadProgress
+    setUploadProgress,
   } = useAppContext();
 
-  const formData = new FormData();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  formData.append("file", uploadFile);
+    const formData = new FormData();
 
-  const fileInputId = "file-" + Math.random().toString(36).substring(2, 8);
+    if (!fieldData?.name.trim() || !fieldData?.location.trim()) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    formData.append("name", fieldData.name);
+    formData.append("location", fieldData.location);
+
+    if (fieldData?.file) {
+      formData.append("file", fieldData.file);
+    }
+
+    createData(formData, {
+      onSuccess: () => {
+        toast.success("Menu created successfully!");
+        setCreateNew(false);
+        setFieldData({
+          name: "",
+          location: "",
+          file: "",
+        });
+        setUploadProgress(0);
+        setUploadFile("");
+      },
+      onError: (err) => {
+        toast.error(err?.response?.data?.message || "Something went wrong.");
+      }
+    });
+  };
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -37,27 +93,55 @@ const CreateMenu = () => {
             <X />
           </div>
         </div>
-        <form className="flex flex-col gap-8.5 pt-6 pb-8  ">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-8.5 pt-6 pb-8  "
+        >
           <div className="flex flex-col gap-3 w-full ">
             <label htmlFor="menuName" className="text-base text-[#101828] ">
               Menu Name
             </label>
             <input
               type="text"
+              name="name"
+              onChange={handleChange}
+              value={fieldData?.name}
               placeholder="Enter menu name"
               className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
             />
           </div>
 
-          <div className="flex flex-col gap-3 w-full ">
-            <label htmlFor="menuName" className="text-base text-[#101828] ">
-              Location
-            </label>
-            <input
-              type="text"
-              placeholder="Enter location"
-              className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
-            />
+          <div className="relative w-full">
+            <Listbox
+              value={location}
+              onChange={(value) => {
+                setLocation(value);
+                setFieldData((prev) => ({
+                  ...prev,
+                  location: value,
+                }));
+              }}
+            >
+              <Listbox.Button className=" w-full flex border-[0.6px] border-[#C8C8C8] items-center justify-between text-gray-900 rounded-lg py-3 px-3.5">
+                <p className="text-gray-500 text-base font-400 ">{location}</p>
+              </Listbox.Button>
+
+              <Listbox.Options className="absolute h-50 overflow-y-auto left-0 top-full mt-2 w-full  bg-white border-gray-200 rounded-lg z-50 shadow">
+                {locations.map((item, index) => (
+                  <Listbox.Option
+                    key={index}
+                    value={item}
+                    className="hover:bg-gray-100 rounded-lg cursor-pointer"
+                  >
+                    <div className=" flex gap-2 rounded-lg py-2.5 px-3.5">
+                      <p className="text-gray-500 text-base font-400 ">
+                        {item}
+                      </p>
+                    </div>
+                  </Listbox.Option>
+                ))}
+              </Listbox.Options>
+            </Listbox>
           </div>
 
           <div className="flex flex-col gap-3 w-full ">
@@ -72,10 +156,10 @@ const CreateMenu = () => {
                 <div className="flex gap-1 flex-col w-full">
                   {/* name and size */}
                   <div className="text-gray-700 text-sm font-500">
-                    <span>{uploadFile.name}</span>
+                    <span>{uploadedFile.name}</span>
                     <br />
                     <span className="text-gray-500 font-400">
-                      {Math.round(uploadFile.size / 1024)} KB
+                      {Math.round(uploadedFile.size / 1024)} KB
                     </span>
                   </div>
                   {/* tracker line and change image icon */}
@@ -90,29 +174,31 @@ const CreateMenu = () => {
                       {uploadProgress}%
                     </p>
                   </div>
-                  
 
                   <div
                     onClick={() => {
                       setUploadFile("");
                       setUploadProgress(0);
-                      
+
                       document.getElementById(fileInputId).value = "";
                     }}
-                    
                   >
                     {/* Hidden input */}
                     <input
                       type="file"
+                      name="file"
                       id={fileInputId}
                       className="hidden"
                       accept="application/pdf"
-                      onChange={handleFileUpload}
+                      onChange={handleChange}
                     />
 
                     {/* Custom upload button */}
-                    <label htmlFor={fileInputId} className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm ">
-                      <RotateCw size={16}  />
+                    <label
+                      htmlFor={fileInputId}
+                      className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
+                    >
+                      <RotateCw size={16} />
                       <span>Replace image</span>
                     </label>
                   </div>
@@ -132,20 +218,25 @@ const CreateMenu = () => {
               </div>
             </div>
           </div>
+
+          <div className="flex items-center w-full gap-3">
+            <button
+              onClick={() => {
+                setCreateNew(false);
+                setUploadFile("");
+              }}
+              className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 "
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]"
+            >
+              Save
+            </button>
+          </div>
         </form>
-
-        <div className="flex items-center w-full gap-3">
-          <button onClick={() => {
-            setCreateNew(false);
-            setUploadFile("");
-
-          }} className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 ">
-            Cancel
-          </button>
-          <button className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]">
-            Save
-          </button>
-        </div>
       </div>
     </div>
   );

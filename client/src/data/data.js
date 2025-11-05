@@ -92,3 +92,18 @@ export const openingHours = [
 export const filter = [
   "All", "Food Type", "Drink Type", "Event"
 ]
+
+
+export const locations = [
+  "Enter Location",
+  "Lagos",
+  "Abuja",
+  "Port Harcourt",
+  "Kano",
+  "Ibadan",
+  "Enugu",
+  "Benin City",
+  "Jos",
+  "Abeokuta",
+  "Kaduna",
+];

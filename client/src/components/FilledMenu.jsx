@@ -12,17 +12,17 @@ import { filter } from "../data/data";
 import { useFilledData } from "../services/pureLeafRequest";
 import Delete from "../components/Delete.jsx";
 import useAppContext from "../context/useAppContext";
-import Edit from "../components/Edit.jsx"
+import Edit from "../components/Edit.jsx";
 
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
   const [cols, setCols] = useState(5);
   const {
-    setSelectedDeleteData,
+    setData,
     openDeleteModal,
     handleToggleDeleteModal,
-    handleToggleEditModal,
-    openEditModal
+    handleOpenEdit,
+    edit,
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
@@ -123,7 +123,7 @@ const FilledMenu = () => {
                   <div
                     onClick={() => {
                       handleToggleDeleteModal();
-                      setSelectedDeleteData(data);
+                      setData(data);
                     }}
                     className="cursor-pointer"
                   >
@@ -132,7 +132,6 @@ const FilledMenu = () => {
                       className="text-[#667085] font-semibold"
                     />
                   </div>
-                  {openDeleteModal && <Delete />}
                 </div>
                 {/* Movie night */}
                 <div className="flex flex-col gap-2">
@@ -161,16 +160,15 @@ const FilledMenu = () => {
 
                 <div
                   onClick={() => {
-                    handleToggleEditModal();
+                    handleOpenEdit();
+                    setData(data);
+
                   }}
                   className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] "
                 >
                   <SquarePen size={16} />
                   <span className="text-sm font-400 ">Edit </span>
                 </div>
-                {openEditModal && (
-                    <Edit />
-                )}
 
                 <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center ">
                   QR
@@ -186,6 +184,10 @@ const FilledMenu = () => {
           </React.Fragment>
         ))}
       </div>
+
+      {/* Modal Rendering component here */}
+      {openDeleteModal && <Delete />}
+      {edit && <Edit />}
     </div>
   );
 };

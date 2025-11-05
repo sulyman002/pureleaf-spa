@@ -12,7 +12,7 @@ export const useFilledData = () => {
         queryKey: ['filledData'],
         queryFn: async () => {
          
-                const response = await axios.get(`${pureLeafUrl}/crud`, {
+                const response = await axios.get(`${pureLeafUrl}/menu`, {
                     headers: {
                         accept: 'application/json',
                     },
@@ -35,7 +35,7 @@ export const useCreateData = () => {
 
     return useMutation({
         mutationFn: async (data) => {
-            const response = await axios.post(`${pureLeafUrl}/post`, data, {
+            const response = await axios.post(`${pureLeafUrl}/menu`, data, {
                 headers: {
                     'Content-Type' : 'application/json',
                     accept: 'application/json'
@@ -61,8 +61,8 @@ export const useUpdateData = () => {
     const client = useQueryClient();
 
     return useMutation({
-        mutationFn: async (id, updatedData) => {
-            const response = await axios.put(`${pureLeafUrl}/${id}`, updatedData, {
+        mutationFn: async (id, payload) => {
+            const response = await axios.put(`${pureLeafUrl}/menu/${id}`, payload, {
                 headers: {
                     'Content-Type': 'application/json',
                     accept: 'application/json',
@@ -88,7 +88,7 @@ export const useDeleteData = () => {
 
     return useMutation({
         mutationFn: async (id) => {
-            const response = await axios.delete(`${pureLeafUrl}/crud/${id}`, {
+            const response = await axios.delete(`${pureLeafUrl}/menu/${id}`, {
                 headers: {
                     accept: 'application/json',
                 },

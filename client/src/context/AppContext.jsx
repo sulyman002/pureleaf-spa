@@ -11,9 +11,9 @@ export const AppProvider = ({ children }) => {
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
-  const [selectedDeleteData, setSelectedDeleteData] = useState(null);
+  const [data, setData] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
+  const [edit, setEdit] = useState(false);
 
   const uploadToServer = async (file) => {
     if (!file) return;
@@ -64,14 +64,13 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleToggleDeleteModal = () => {
-    setOpenDeleteModal(!openDeleteModal);
+    setOpenDeleteModal((prev) => !prev);
   };
 
-  const handleToggleEditModal = () => {
-    setOpenEditModal(!openEditModal);
+  const handleOpenEdit = () => {
+    setEdit((prev) => !prev);
     console.log("you clicked this sulyman");
-    console.log(openEditModal);
-    
+    console.log(edit);
   };
 
   const store = {
@@ -89,12 +88,13 @@ export const AppProvider = ({ children }) => {
     setUploadProgress,
     uploadProgress,
     handleFileUpload,
-    setSelectedDeleteData,
-    selectedDeleteData,
+    setData,
+    data,
     setOpenDeleteModal,
     openDeleteModal,
     handleToggleDeleteModal,
-    handleToggleEditModal
+    handleOpenEdit,
+    edit,
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;
