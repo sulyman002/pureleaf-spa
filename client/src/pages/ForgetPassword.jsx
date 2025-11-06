@@ -2,28 +2,33 @@ import React from "react";
 import background_image from "../assets/background-img.jpg";
 import { useForm } from "react-hook-form";
 import useAuth from "../context/useAuth";
-import { toast } from "sonner";
 
-const ResetPassword = () => {
-  const { resetPassword } = useAuth();
+
+const ForgetPassword = () => {
+  const { forgotPassword } = useAuth();
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const token = new URLSearchParams(window.location.search).get("token");
-  const onSubmit = async (data) => {
-    const { newPassword, confirmPassword } = data;
 
-    if (newPassword !== confirmPassword) {
-      toast.error("password do not match");
-      return null;
-    }
+  const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      await resetPassword(token, newPassword);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const { email } = data;
+
+      if (email.includes("@")) {
+        const success = await forgotPassword(email);
+        if (success) {
+            reset({ email: ""})
+            
+        }
+      } else {
+        return null;
+      }
     } catch (error) {
       console.error(error);
       setError("root", {
@@ -47,52 +52,33 @@ const ResetPassword = () => {
             <img src="#" alt="pureleaf-spa-logo" />
           </div>
           <h3 className="text-center font-600 font-semi text-[30px] gray-900 ">
-            Create New Password
+            Reset Password
           </h3>
           {/* fills */}
           <div className="flex flex-col gap-6 w-full">
+            <p className=" text-center">We will send a reset password link to your registered mail</p>
             <div className="flex flex-col gap-2 ">
-              <label htmlFor="newPassword">New Password</label>
+              <label htmlFor="email">Email</label>
               <input
-                {...register("newPassword", {
-                  required: "This field is required. ",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters. ",
+                {...register("email", {
+                  required: "Enter a valid email address. ",
+                  validate: (value) => {
+                    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return (
+                      pattern.test(value) ||
+                      "Please enter a valid email address. "
+                    );
                   },
                 })}
-                type="password"
-                placeholder="Enter your new password"
+                type="email"
+                placeholder="Enter your email"
                 className={`placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 outline-none border ${
-                  errors.newPassword ? "border-red-500" : "border-gray-300"
+                  errors.email ? "border-red-500" : "border-gray-300"
                 } `}
               />
-              {errors.newPassword && (
+              {errors.email && (
                 <span className="text-red-500 text-[14px]">
-                  {errors.newPassword.message}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-2 ">
-              <label htmlFor="confirmPassword">Password</label>
-              <input
-                {...register("confirmPassword", {
-                  required: "Password is required. ",
-                  minLength: {
-                    value: 8,
-                    message: "Password must be at least 8 characters. ",
-                  },
-                })}
-                type="password"
-                placeholder="confirm your password"
-                className={`placeholder-gray-500 rounded-lg text-[16px] py-2.5 px-3.5 outline-none border ${
-                  errors.confirmPassword ? "border-red-500" : "border-gray-300"
-                } `}
-              />
-              {/* will later change dynamically */}
-              {errors.confirmPassword && (
-                <span className="text-red-500 text-[14px]">
-                  {errors.confirmPassword.message}
+                  {errors.email.message}
                 </span>
               )}
             </div>
@@ -121,4 +107,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ForgetPassword;

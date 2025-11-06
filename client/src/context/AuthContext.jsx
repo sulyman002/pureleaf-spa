@@ -29,7 +29,9 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      const { accessToken, user } = response.data;
+      const { accessToken, user } = response.data.data;
+      console.log(response.data);
+      
       setItem("accessToken", accessToken);
       setItem("user", JSON.stringify(user));
       setUser(user);

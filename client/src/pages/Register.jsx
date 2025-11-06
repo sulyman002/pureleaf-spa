@@ -7,6 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import useAppContext from "../context/useAppContext";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/useAuth.js";
+import ForgetPassword from "./ForgetPassword.jsx";
 // import { getItem } from "../utils/localStorage.js";
 // import { toast } from "sonner";
 
@@ -32,7 +33,7 @@ const Register = () => {
 
       if (loginState === "Sign Up") {
         const success = await signUp(name, email, password);
-        if (success) navigate("/admin/dashboard");
+        if (success) setLoginState("Sign In");
         return;
       }
 
@@ -163,6 +164,16 @@ const Register = () => {
                 </span>
               )}
             </div>
+            { loginState === "Sign In" && (
+              <p onClick={
+                async () => {
+                  await new Promise((resolve) => setTimeout(resolve, 500));
+
+                  navigate("/forgot-password")
+                  
+                }
+              } className=" cursor-pointer text-red-500 ">Forget password?</p>
+            ) }
           </div>
           <div className="flex flex-col w-full gap-4 mt-6">
             <button

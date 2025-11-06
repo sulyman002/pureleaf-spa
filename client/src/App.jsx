@@ -11,9 +11,12 @@ import Password from "./pages/SettingPages/Password.jsx";
 import Team from "./pages/SettingPages/Team.jsx";
 import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
+import PublicRoute from "./routes/PublicRoute.jsx";
 import TanstackProvider from "./providers/TanstackProvider.jsx";
 
 import { Toaster } from "sonner";
+import ForgetPassword from "./pages/ForgetPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 const App = () => {
   return (
@@ -21,7 +24,16 @@ const App = () => {
       <Toaster position="top-right" richColors />
       <TanstackProvider>
         <Routes>
-          <Route path="/" element={<Register />} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route path="forgot-password" element={<ForgetPassword />} />
+          <Route path="reset-password" element={<ResetPassword />} />
 
           <Route
             path="admin"
