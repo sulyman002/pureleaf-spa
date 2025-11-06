@@ -78,7 +78,7 @@ const CreateMenu = () => {
       },
       onError: (err) => {
         toast.error(err?.response?.data?.message || "Something went wrong.");
-      }
+      },
     });
   };
 
@@ -124,6 +124,9 @@ const CreateMenu = () => {
             >
               <Listbox.Button className=" w-full flex border-[0.6px] border-[#C8C8C8] items-center justify-between text-gray-900 rounded-lg py-3 px-3.5">
                 <p className="text-gray-500 text-base font-400 ">{location}</p>
+                <div className="">
+                  <ChevronDown size={20} className=" text-gray-500" />
+                </div>
               </Listbox.Button>
 
               <Listbox.Options className="absolute h-50 overflow-y-auto left-0 top-full mt-2 w-full  bg-white border-gray-200 rounded-lg z-50 shadow">

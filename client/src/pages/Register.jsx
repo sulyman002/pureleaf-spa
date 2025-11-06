@@ -7,13 +7,13 @@ import { FcGoogle } from "react-icons/fc";
 import useAppContext from "../context/useAppContext";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/useAuth.js";
-import { getItem } from "../utils/localStorage.js";
-import { toast } from "sonner";
+// import { getItem } from "../utils/localStorage.js";
+// import { toast } from "sonner";
 
 const Register = () => {
   const navigate = useNavigate();
 
-  const { userDetails, setLoginDetails } = useAppContext();
+  const { userDetails } = useAppContext();
   const {
     register,
     handleSubmit,
@@ -22,51 +22,32 @@ const Register = () => {
   } = useForm();
 
   const { login, signUp } = useAuth();
+  const [loginState, setLoginState] = useState("Sign In");
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const existingUser = getItem("user");
-      console.log(existingUser);
+      const { name, email, password } = data;
 
-      console.log(data);
-
-      const foundUser = Array.isArray(existingUser)
-        ? existingUser.find((user) => user.email === data.email)
-        : null;
-      console.log('this is personal data:', foundUser);
-      setLoginDetails(foundUser);
+      if (loginState === "Sign Up") {
+        const success = await signUp(name, email, password);
+        if (success) navigate("/admin/dashboard");
+        return;
+      }
 
       if (loginState === "Sign In") {
-        // Check if user exists before logging in
-        if (!foundUser || foundUser.email !== data.email) {
-          toast.error("User not found. Please sign up first.");
-
-          return;
-        }
-        login(data.email, data.password);
-        navigate("/admin/dashboard");
-        toast.success("Logged in successfully!");
-      } else {
-        // Check if the same email already exists
-        if (existingUser && existingUser.email === data.email) {
-          toast.error("Email already registered. Please sign in instead.");
-
-          return;
-        }
-        signUp(data.name, data.email, data.password);
-        navigate("/admin/dashboard");
+        const success = await login(email, password);
+        if (success) navigate("/admin/dashboard");
+        return;
       }
     } catch (error) {
       console.error(error);
       setError("root", {
-        message: "Something went wrong. Please try again.",
+        message: error?.response?.data?.message || "Something went wrong.",
       });
     }
   };
-
-  const [loginState, setLoginState] = useState("Sign In");
 
   const toggleLoginState = async () => {
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -78,23 +59,20 @@ const Register = () => {
       const res = await axios.get(
         "https://www.googleapis.com/oauth2/v3/userinfo",
         {
-          headers: {
-            Authorization: `Bearer ${tokenResponse.access_token}`,
-          },
+          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         }
       );
 
       const { name, email } = res.data;
 
       if (loginState === "Sign In") {
-        login(email, "google_oauth");
+        await login(email, "google_oauth");
       } else {
-        signUp(email, name, "google_oauth");
+        await signUp(name, email, "google_oauth");
       }
+
       navigate("/admin/dashboard");
-      console.log(res.data);
     },
-    onError: () => console.log("Google Sign In Failed"),
   });
 
   console.log(userDetails);
