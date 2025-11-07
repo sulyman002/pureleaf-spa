@@ -3,44 +3,39 @@ import React, { useState } from "react";
 import useAppContext from "../context/useAppContext";
 import { useFilledData, useCreateData } from "../services/pureLeafRequest";
 import { Listbox } from "@headlessui/react";
-import { locations } from "../data/data";
+import { descriptions } from "../data/data";
 import { toast } from "sonner";
 
 const CreateMenu = () => {
   const { data: cardData } = useFilledData();
   const { mutate: createData } = useCreateData();
-  const [location, setLocation] = useState(locations[0]);
-  const fileInputId = "file-" + Math.random().toString(36).substring(2, 8);
+  const [description, setDescription] = useState(descriptions[0]);
+  const fileInputId = React.useId();
   const [fieldData, setFieldData] = useState({
     name: "",
-    location: "",
-    file: "",
   });
 
-  const uploadedFile = fieldData?.file;
+
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "file") {
-      setFieldData((prev) => ({
-        ...prev,
-        [name]: files[0],
-      }));
-    } else {
+    const {name, value} = e.target;
       setFieldData((prev) => ({
         ...prev,
         [name]: value,
       }));
-    }
+    
   };
+
+  // console.log(fieldData);
 
   const data = cardData || [];
 
-  console.log(data);
+  // console.log(data);
 
   const {
     setCreateNew,
     uploadProgress,
+    uploadFile,
     uploadStatus,
     handleFileUpload,
     setUploadFile,
@@ -52,16 +47,17 @@ const CreateMenu = () => {
 
     const formData = new FormData();
 
-    if (!fieldData?.name.trim() || !fieldData?.location.trim()) {
+    if (!fieldData?.name.trim() || !uploadFile) {
       toast.error("Please fill in all required fields.");
       return;
     }
 
     formData.append("name", fieldData.name);
-    formData.append("location", fieldData.location);
+    // formData.append("description", description);
+    formData.append("category", description);
 
-    if (fieldData?.file) {
-      formData.append("file", fieldData.file);
+    if (uploadFile) {
+      formData.append("file", uploadFile);
     }
 
     createData(formData, {
@@ -70,17 +66,17 @@ const CreateMenu = () => {
         setCreateNew(false);
         setFieldData({
           name: "",
-          location: "",
-          file: "",
         });
+        setDescription(descriptions[0])
         setUploadProgress(0);
-        setUploadFile("");
+        setUploadFile(null);
       },
       onError: (err) => {
         toast.error(err?.response?.data?.message || "Something went wrong.");
       },
     });
   };
+  
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -113,24 +109,24 @@ const CreateMenu = () => {
 
           <div className="relative w-full">
             <Listbox
-              value={location}
+              value={description}
               onChange={(value) => {
-                setLocation(value);
+                setDescription(value);
                 setFieldData((prev) => ({
                   ...prev,
-                  location: value,
+                  category: value,
                 }));
               }}
             >
               <Listbox.Button className=" w-full flex border-[0.6px] border-[#C8C8C8] items-center justify-between text-gray-900 rounded-lg py-3 px-3.5">
-                <p className="text-gray-500 text-base font-400 ">{location}</p>
+                <p className="text-gray-500 text-base font-400 ">{description}</p>
                 <div className="">
                   <ChevronDown size={20} className=" text-gray-500" />
                 </div>
               </Listbox.Button>
 
               <Listbox.Options className="absolute h-50 overflow-y-auto left-0 top-full mt-2 w-full  bg-white border-gray-200 rounded-lg z-50 shadow">
-                {locations.map((item, index) => (
+                {descriptions.map((item, index) => (
                   <Listbox.Option
                     key={index}
                     value={item}
@@ -159,10 +155,10 @@ const CreateMenu = () => {
                 <div className="flex gap-1 flex-col w-full">
                   {/* name and size */}
                   <div className="text-gray-700 text-sm font-500">
-                    <span>{uploadedFile.name}</span>
+                    <span>{uploadFile?.name}</span>
                     <br />
                     <span className="text-gray-500 font-400">
-                      {Math.round(uploadedFile.size / 1024)} KB
+                      {Math.round(uploadFile?.size / 1024)} KB
                     </span>
                   </div>
                   {/* tracker line and change image icon */}
@@ -182,7 +178,6 @@ const CreateMenu = () => {
                     onClick={() => {
                       setUploadFile("");
                       setUploadProgress(0);
-
                       document.getElementById(fileInputId).value = "";
                     }}
                   >
@@ -193,7 +188,7 @@ const CreateMenu = () => {
                       id={fileInputId}
                       className="hidden"
                       accept="application/pdf"
-                      onChange={handleChange}
+                      onChange={handleFileUpload}
                     />
 
                     {/* Custom upload button */}

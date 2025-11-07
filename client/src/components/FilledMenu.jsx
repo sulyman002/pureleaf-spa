@@ -13,20 +13,28 @@ import { useFilledData } from "../services/pureLeafRequest";
 import Delete from "../components/Delete.jsx";
 import useAppContext from "../context/useAppContext";
 import Edit from "../components/Edit.jsx";
+import CreateMenu from "./CreateMenu.jsx";
+import axios from "axios";
 
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
+  const [fileSizes, setFileSizes] = useState({});
   const [cols, setCols] = useState(5);
   const {
     setData,
     openDeleteModal,
     handleToggleDeleteModal,
     handleOpenEdit,
+    handleFileUpload,
     edit,
+    setCreateNew,
+    createNew,
+    setUploadFile,
+    uploadFile,
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
-  const pureLeafData = cardData || [];
+  const pureLeafData = cardData.data.data || [];
 
   const filterData =
     filterBy === "All"
@@ -47,25 +55,106 @@ const FilledMenu = () => {
     return () => window.removeEventListener("resize", updateCols);
   }, []);
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+  const handleOnDrop = (e) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    const syntheticEvent = { target: { files: [file] } };
+    console.log(syntheticEvent);
+    handleFileUpload(syntheticEvent);
+    setCreateNew(true);
+  };
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const fileType = (type) => {
+    if (!type) return "";
+    return type.split(".").pop().toUpperCase();
+  };
+
+  const fileInputId = React.useId();
+
+  const getPDFSize = async (url) => {
+    const response = await axios.head(url, { method: "HEAD" });
+    const size = response.headers["content-length"];
+    return size ? Number(size) : null;
+  };
+
+  useEffect(() => {
+    const fetchSizes = async () => {
+      const sizes = {};
+
+      for (const item of pureLeafData) {
+        try {
+          const response = await axios.head(item.imageUrl);
+          const size = response.headers["content-length"];
+          sizes[item._id] = size
+            ? (size / (1024 * 1024)).toFixed(2) + " MB"
+            : "Unknown";
+        } catch {
+          sizes[item._id] = "Unknown";
+        }
+      }
+
+      setFileSizes(sizes);
+    };
+
+    if (pureLeafData.length > 0) fetchSizes();
+  }, [pureLeafData]);
+
   return (
     <div className="flex flex-col gap-6 py-5 ">
       {/* upload section */}
-      <div className="flex flex-col items-center justify-center py-4 px-6 gap-3 shadow-xs border border-gray-50 w-full">
+      <div
+        onDrop={handleOnDrop}
+        onDragOver={handleDragOver}
+        className="flex flex-col items-center justify-center py-4 px-6 gap-3 shadow-xs border border-gray-100 w-full"
+      >
         <div className="h-10 w-10 rounded-full border-[6px] border-gray-100 bg-gray-200 flex items-center justify-center">
           <CloudUpload size={20} className="text-gray-600" />
         </div>
         <div className="flex flex-col gap-1 text-sm text-center text-gray-500">
-          <p className="text-sm">
-            <b className="text-[#5C2E1B] font-500 cursor-pointer">
-              Click to upload{" "}
-            </b>
-            or drag and drop a new menu
-          </p>
+          {/* click to upload */}
+          <div>
+            {/* Hidden input */}
+            <input
+              type="file"
+              id={fileInputId}
+              className="hidden"
+              accept="application/pdf"
+              onChange={(e) => {
+                handleFileUpload(e);
+                setCreateNew(true);
+              }}
+            />
+
+            {/* Custom upload button */}
+            <label htmlFor={fileInputId} className="text-sm">
+              <b className="text-[#5C2E1B] font-500 cursor-pointer">
+                Click to upload{" "}
+              </b>
+              or drag and drop a new menu
+            </label>
+          </div>
+          {/* click to upload */}
+
           <p>
             Upload your PDF or image menus and they’ll be instantly available
             via QR codes. Max size: 10MB
           </p>
         </div>
+        {createNew && <CreateMenu />}
       </div>
       {/* my menu */}
       <div className="flex items-center justify-between px-4 md:px-8">
@@ -139,14 +228,15 @@ const FilledMenu = () => {
                     {data.name}
                   </p>
                   <div className="flex items-center gap-1 text-xs text-gray-500 font-400 ">
-                    <span>PDF</span>
+                    <span>{fileType(data.imageUrl)}</span>
                     <div className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-gray-500"></span>
-                      <span className="">OCT 5, 2025</span>
+                      <span className="">{formatDate(data.createdAt)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <span className="h-2 w-2 rounded-full bg-gray-500"></span>
-                      <span className="">0.4MB</span>
+
+                      <span>{fileSizes[data._id] || "Loading..."}</span>
                     </div>
                   </div>
                 </div>
@@ -162,7 +252,6 @@ const FilledMenu = () => {
                   onClick={() => {
                     handleOpenEdit();
                     setData(data);
-
                   }}
                   className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] "
                 >

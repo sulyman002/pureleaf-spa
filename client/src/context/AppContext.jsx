@@ -62,6 +62,7 @@ export const AppProvider = ({ children }) => {
       toast.error("Please upload a valid PDF file.");
     }
   };
+  
 
   const handleToggleDeleteModal = () => {
     setOpenDeleteModal((prev) => !prev);

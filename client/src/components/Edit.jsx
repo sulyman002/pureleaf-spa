@@ -1,16 +1,18 @@
 import { X } from "lucide-react";
 import React, { useState } from "react";
+import { Listbox } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 import useAppContext from "../context/useAppContext";
 import { useUpdateData } from "../services/pureLeafRequest";
+import { descriptions } from "../data/data";
+
 
 const Edit = () => {
   const { handlOpenEdit, data: editData } = useAppContext();
+   const [description, setDescription] = useState(descriptions[0]);
   const { mutate: updateData } = useUpdateData();
-  const [formData, setFormData] = useState({
-    menuName: "",
-    location: "",
-    type: "",
-  });
+  const [formData, setFormData] = useState(editData);
+  console.log(editData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,10 +25,7 @@ const Edit = () => {
   console.log(editData);
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    
-  }
-  
+  };
 
   // const fileData = new FormData();
 
@@ -45,16 +44,19 @@ const Edit = () => {
             </div>
           </div>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8.5 pt-6 pb-8 px-5 ">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-8.5 pt-6 pb-8 px-5 "
+        >
           <div className="flex flex-col gap-3 w-full ">
             <label htmlFor="menuName" className="text-base text-[#101828] ">
               Menu Name
             </label>
             <input
               type="text"
-              name="menuName"
+              name="name"
               onChange={handleChange}
-              value={formData?.menuName}
+              value={formData?.name}
               placeholder="Enter menu name"
               className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
             />
@@ -64,20 +66,44 @@ const Edit = () => {
             <label htmlFor="menuName" className="text-base text-[#101828] ">
               Location
             </label>
-            <select
-              name="location"
-              onChange={handleChange}
-              value={formData?.location}
-              id=""
-              className="py-3 px-3.5 outline-none border-[0.6px] border-[#C8C8C8] rounded-lg"
-            >
-              <option value="" defaultValue="Select location">
-                Select location
-              </option>
-              <option value="a">a</option>
-              <option value="b">b</option>
-              <option value="c">c</option>
-            </select>
+
+            <div className="relative w-full">
+              <Listbox
+                value={location}
+                onChange={(value) => {
+                  setDescription(value);
+                  setFieldData((prev) => ({
+                    ...prev,
+                    location: value,
+                  }));
+                }}
+              >
+                <Listbox.Button className=" w-full flex border-[0.6px] border-[#C8C8C8] items-center justify-between text-gray-900 rounded-lg py-3 px-3.5">
+                  <p className="text-gray-500 text-base font-400 ">
+                    {description}
+                  </p>
+                  <div className="">
+                    <ChevronDown size={20} className=" text-gray-500" />
+                  </div>
+                </Listbox.Button>
+
+                <Listbox.Options className="absolute h-50 overflow-y-auto left-0 top-full mt-2 w-full  bg-white border-gray-200 rounded-lg z-50 shadow">
+                  {descriptions.map((item, index) => (
+                    <Listbox.Option
+                      key={index}
+                      value={item}
+                      className="hover:bg-gray-100 rounded-lg cursor-pointer"
+                    >
+                      <div className=" flex gap-2 rounded-lg py-2.5 px-3.5">
+                        <p className="text-gray-500 text-base font-400 ">
+                          {item}
+                        </p>
+                      </div>
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Listbox>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3 w-full ">
@@ -174,7 +200,10 @@ const Edit = () => {
             <button className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 ">
               Cancel
             </button>
-            <button type="submit" className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]">
+            <button
+              type="submit"
+              className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]"
+            >
               Save
             </button>
           </div>

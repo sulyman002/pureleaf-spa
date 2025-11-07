@@ -94,7 +94,7 @@ export const filter = [
 ]
 
 
-export const locations = [
+export const descriptions = [
   "Enter Location",
   "Lagos",
   "Abuja",
