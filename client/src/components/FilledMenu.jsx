@@ -7,7 +7,7 @@ import {
   Trash2,
   Utensils,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { filter } from "../data/data";
 import { useFilledData } from "../services/pureLeafRequest";
 import Delete from "../components/Delete.jsx";
@@ -34,7 +34,9 @@ const FilledMenu = () => {
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
-  const pureLeafData = cardData.data.data || [];
+  const pureLeafData = useMemo(() =>  cardData.data.data || [], [cardData.data.data]);
+  console.log(cardData);
+  
 
   const filterData =
     filterBy === "All"
@@ -84,12 +86,6 @@ const FilledMenu = () => {
   };
 
   const fileInputId = React.useId();
-
-  const getPDFSize = async (url) => {
-    const response = await axios.head(url, { method: "HEAD" });
-    const size = response.headers["content-length"];
-    return size ? Number(size) : null;
-  };
 
   useEffect(() => {
     const fetchSizes = async () => {
@@ -144,8 +140,10 @@ const FilledMenu = () => {
               <b className="text-[#5C2E1B] font-500 cursor-pointer">
                 Click to upload{" "}
               </b>
-              or drag and drop a new menu
+              
             </label>
+
+            <span>or drag and drop a new menu</span>
           </div>
           {/* click to upload */}
 

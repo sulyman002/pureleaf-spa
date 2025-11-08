@@ -86,41 +86,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const profile = async () => {
-    try {
-      const token = getItem("accessToken");
-      const response = await api.get("/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-
-      return response.data.data;
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Invalid credentials.");
-      return null;
-    }
-  };
-
-  useEffect(() => {
-    const token = getItem("accessToken");
-
-    if (!token) {
-      return;
-    }
-
-    const fetchUser = async () => {
-      const userData = await profile();
-      if (userData) {
-        setUser(userData);
-        setItem("user", userData); 
-      }
-    };
-    fetchUser();
-  }, []);
-
   return (
     <AuthContext.Provider
       value={{ user, login, logout, signUp, forgotPassword, resetPassword }}

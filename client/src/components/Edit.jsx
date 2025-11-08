@@ -1,17 +1,31 @@
-import { X } from "lucide-react";
+import { CircleCheck, RotateCw, Trash2, X } from "lucide-react";
 import React, { useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { ChevronDown } from "lucide-react";
 import useAppContext from "../context/useAppContext";
 import { useUpdateData } from "../services/pureLeafRequest";
 import { descriptions } from "../data/data";
-
+import { toast } from "sonner";
 
 const Edit = () => {
-  const { handlOpenEdit, data: editData } = useAppContext();
-   const [description, setDescription] = useState(descriptions[0]);
+  const {
+    handleOpenEdit,
+    data: editData,
+    uploadFile,
+    uploadProgress,
+    handleFileUpload,
+    setUploadFile,
+    setUploadProgress,
+    setFieldData,
+  } = useAppContext();
+  const [description, setDescription] = useState(descriptions[0]);
   const { mutate: updateData } = useUpdateData();
-  const [formData, setFormData] = useState(editData);
+  const [formData, setFormData] = useState({
+    ...editData,
+    oldFile: editData?.imageUrl,
+    newFile: null,
+  });
+  const fileInputId = React.useId();
   console.log(editData);
 
   const handleChange = (e) => {
@@ -23,13 +37,24 @@ const Edit = () => {
   };
 
   console.log(editData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const updatedFormData = new FormData();
+
+    if (!formData?.name || !description) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    updatedFormData.append("name", formData?.name);
+
+    updateData({
+      id: editData?.id,
+      payload: updatedFormData,
+    });
   };
-
-  // const fileData = new FormData();
-
-  // fileData.append('file', uploadFile)
 
   return (
     <div className="fixed flex items-center justify-center z-[999] inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -39,7 +64,7 @@ const Edit = () => {
             <p className="font-600 font-semibold text-2xl text-gray-900 ">
               Edit 'Breakfast'
             </p>
-            <div onClick={() => handlOpenEdit()} className="cursor-pointer ">
+            <div onClick={handleOpenEdit} className="cursor-pointer ">
               <X />
             </div>
           </div>
@@ -127,23 +152,43 @@ const Edit = () => {
           </div>
 
           {/* Upload layout */}
-          {/* <div className="flex flex-col gap-3 w-full ">
+          <div className="flex flex-col gap-3 w-full ">
             <label htmlFor="menuName" className="text-base text-[#101828] ">
               Upload Menu
             </label>
             <div className="rounded-lg  border border-[#AD968C] p-4 flex w-full  ">
               <div className="flex gap-4 w-full ">
-                <div className="">Image here</div>
-
+                {/* image */}
+                <div className=""></div>
+                {/* another content */}
                 <div className="flex gap-1 flex-col w-full">
-                  <div className="text-gray-700 text-sm font-500">
-                    <span>{uploadFile.name}</span>
+                  {/* name and size */}
+                  {formData.newFile ? (
+                    <div className="text-gray-700 text-sm font-500">
+                      <span>{formData.newFile.name}</span>
+                      <br />
+                      <span className="text-gray-500 font-400">
+                        {Math.round(formData.newFile?.size / 1024)} KB
+                      </span>
+                    </div>
+                  ) : (
+                    <a
+                      href={formData.oldFile}
+                      target="_blank"
+                      rel="noreferrer"
+                      className=" text-sm"
+                    >
+                      View existing PDF
+                    </a>
+                  )}
+                  {/* <div className="text-gray-700 text-sm font-500">
+                    <span>{uploadFile?.name}</span>
                     <br />
                     <span className="text-gray-500 font-400">
-                      {Math.round(uploadFile.size / 1024)} KB
+                      {Math.round(uploadFile?.size / 1024)} KB
                     </span>
-                  </div>
-
+                  </div> */}
+                  {/* tracker line and change image icon */}
                   <div className="w-full flex items-center gap-3 py-1">
                     <div className="h-2 rounded-full w-full bg-[#F9F5FF] ">
                       <div
@@ -158,20 +203,22 @@ const Edit = () => {
 
                   <div
                     onClick={() => {
-                      setUploadFile("");
+                      setUploadFile(null);
                       setUploadProgress(0);
-
                       document.getElementById(fileInputId).value = "";
                     }}
                   >
+                    {/* Hidden input */}
                     <input
                       type="file"
+                      name="file"
                       id={fileInputId}
                       className="hidden"
                       accept="application/pdf"
                       onChange={handleFileUpload}
                     />
 
+                    {/* Custom upload button */}
                     <label
                       htmlFor={fileInputId}
                       className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
@@ -183,6 +230,7 @@ const Edit = () => {
                 </div>
               </div>
 
+              {/* trash */}
               <div className="">
                 {uploadProgress === 100 ? (
                   <CircleCheck size={16} className="text-[#5C2E1B] " />
@@ -194,15 +242,18 @@ const Edit = () => {
                 )}
               </div>
             </div>
-          </div> */}
+          </div>
           {/* Upload layout ends here */}
           <div className="flex items-center w-full gap-3">
-            <button className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 ">
+            <button
+              onClick={handleOpenEdit}
+              className="cursor-pointer w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 "
+            >
               Cancel
             </button>
             <button
               type="submit"
-              className="w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]"
+              className="cursor-pointer w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B]"
             >
               Save
             </button>

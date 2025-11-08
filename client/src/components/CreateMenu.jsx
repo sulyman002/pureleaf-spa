@@ -28,7 +28,7 @@ const CreateMenu = () => {
 
   // console.log(fieldData);
 
-  const data = cardData || [];
+  // const data = cardData || [];
 
   // console.log(data);
 
@@ -53,7 +53,6 @@ const CreateMenu = () => {
     }
 
     formData.append("name", fieldData.name);
-    // formData.append("description", description);
     formData.append("category", description);
 
     if (uploadFile) {

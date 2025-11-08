@@ -90,7 +90,7 @@ export const openingHours = [
 ]
 
 export const filter = [
-  "All", "Food Type", "Drink Type", "Event"
+  "All", "Spa", "Restaurant"
 ]
 
 
