@@ -29,6 +29,11 @@
       setValue("profile", [file]);      
     };
 
+    const onSubmit = async () => {
+      const formData = new FormData();
+
+    }
+
     return (
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         <div className="flex flex-col gap-4 pb-4">
