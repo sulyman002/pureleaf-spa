@@ -29,8 +29,11 @@
       setValue("profile", [file]);      
     };
 
-    const onSubmit = async () => {
+    const onSubmit = async (data) => {
       const formData = new FormData();
+
+      formData.append("businessName", data.businessName);
+      
 
     }
 
