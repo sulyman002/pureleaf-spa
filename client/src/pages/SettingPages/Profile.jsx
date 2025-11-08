@@ -33,7 +33,9 @@
       const formData = new FormData();
 
       formData.append("businessName", data.businessName);
-      
+      formData.append("type", data.type);
+      formData.append("number", data.nu)mber
+
 
     }
 
