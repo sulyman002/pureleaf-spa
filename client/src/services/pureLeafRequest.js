@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getItem, setItem } from "../utils/localStorage";
+import { toast } from "sonner";
 
 const pureLeafUrl =
   import.meta.env.VITE_BASEURL ||
@@ -124,9 +125,7 @@ export const useAuthProfile = () => {
   });
 };
 
-
 // const { mutate: profile } = useAuthProfile();
-
 
 // useEffect(() => {
 //     const token = getItem("accessToken");
@@ -139,7 +138,7 @@ export const useAuthProfile = () => {
 //       const userData = await profile();
 //       if (userData) {
 //         setUser(userData);
-//         setItem("user", userData); 
+//         setItem("user", userData);
 //       }
 //     };
 //     fetchUser();
@@ -157,7 +156,6 @@ export const updateBusinessProfile = () => {
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
             accept: "application/json",
           },
@@ -167,6 +165,7 @@ export const updateBusinessProfile = () => {
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["authProfile"] });
+      toast.success("user profile successfully updated");
     },
     onError: (error) => {
       console.error("Error updating business profile:", error);
