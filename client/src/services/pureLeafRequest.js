@@ -156,15 +156,19 @@ export const updateBusinessProfile = () => {
         data,
         {
           headers: {
+            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
             accept: "application/json",
           },
+          transformRequest: (data) => data,
         }
       );
       return response.data.data;
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["authProfile"] });
+      console.error("user profile successfully updated");
+
       toast.success("user profile successfully updated");
     },
     onError: (error) => {

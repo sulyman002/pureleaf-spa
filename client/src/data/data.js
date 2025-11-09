@@ -73,19 +73,19 @@ export const openingHours = [
         id: 1,
         zone: "UTC +0",
         from: 7,
-        to: 4
+        to: 17,
     },
     {
         id: 2,
         zone: "UTC +1",
         from: 8,
-        to: 5,
+        to: 17,
     },
     {
         id: 3,
         zone: "UTC +2",
         from: 9,
-        to: 6,
+        to: 18,
     },
 ]
 
