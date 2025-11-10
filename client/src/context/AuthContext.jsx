@@ -86,9 +86,41 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const changePassword = async ({ credentials }) => {
+    const token = getItem("accessToken");
+
+    try {
+      const response = await api.patch("/user/change-password", credentials, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          accept: "application/json",
+        },
+      });
+      toast.success(response.data?.message || "Password changed successfully");
+      return response.data;
+    } catch (error) {
+      console.log("Password change error:", error?.response?.data || error);
+      const message =
+        error?.response?.data?.message ||
+        "Something went wrong while changing password";
+
+      toast.error(message);
+      throw new Error(message);
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, login, logout, signUp, forgotPassword, resetPassword }}
+      value={{
+        user,
+        login,
+        logout,
+        signUp,
+        forgotPassword,
+        resetPassword,
+        changePassword,
+      }}
     >
       {children}
     </AuthContext.Provider>

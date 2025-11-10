@@ -15,6 +15,7 @@ import useAppContext from "../context/useAppContext";
 import Edit from "../components/Edit.jsx";
 import CreateMenu from "./CreateMenu.jsx";
 import axios from "axios";
+import Qr from "../components/Qr.jsx";
 
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
@@ -29,14 +30,19 @@ const FilledMenu = () => {
     edit,
     setCreateNew,
     createNew,
+    handleOpenQr,
+    openQr,
+    convertToQrcode,
     setUploadFile,
     uploadFile,
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
-  const pureLeafData = useMemo(() =>  cardData.data.data || [], [cardData.data.data]);
+  const pureLeafData = useMemo(
+    () => cardData.data.data || [],
+    [cardData.data.data]
+  );
   console.log(cardData);
-  
 
   const filterData =
     filterBy === "All"
@@ -140,7 +146,6 @@ const FilledMenu = () => {
               <b className="text-[#5C2E1B] font-500 cursor-pointer">
                 Click to upload{" "}
               </b>
-              
             </label>
 
             <span>or drag and drop a new menu</span>
@@ -257,7 +262,14 @@ const FilledMenu = () => {
                   <span className="text-sm font-400 ">Edit </span>
                 </div>
 
-                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center ">
+                <div
+                  onClick={() => {
+                    handleOpenQr();
+                    convertToQrcode(data?.imageUrl);
+                    setData(data);
+                  }}
+                  className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center "
+                >
                   QR
                 </div>
               </div>
@@ -275,6 +287,8 @@ const FilledMenu = () => {
       {/* Modal Rendering component here */}
       {openDeleteModal && <Delete />}
       {edit && <Edit />}
+      {/* its modal here */}
+      {openQr && <Qr />}
     </div>
   );
 };

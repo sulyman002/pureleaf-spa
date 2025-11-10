@@ -1,6 +1,7 @@
 // import axios from "axios";
 import { createContext, useState } from "react";
 import { toast } from "sonner";
+import QRCode from "qrcode";
 
 export const AppContext = createContext({});
 
@@ -14,6 +15,10 @@ export const AppProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [openQr, setOpenQr] = useState(false);
+  const [qr, setQr] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [openQrUpdate, setOpenQrUpdate] = useState(false);
 
   const uploadToServer = async (file) => {
     if (!file) return;
@@ -49,6 +54,14 @@ export const AppProvider = ({ children }) => {
   //     }
   //   }
 
+  const handleOpenQr = () => {
+    setOpenQr(!openQr);
+  };
+
+  const handleOpenQrUpdate = () => {
+    setOpenQrUpdate((prev) => !prev);
+  };
+
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -62,7 +75,6 @@ export const AppProvider = ({ children }) => {
       toast.error("Please upload a valid PDF file.");
     }
   };
-  
 
   const handleToggleDeleteModal = () => {
     setOpenDeleteModal((prev) => !prev);
@@ -72,6 +84,35 @@ export const AppProvider = ({ children }) => {
     setEdit((prev) => !prev);
     console.log("you clicked this sulyman");
     console.log(edit);
+  };
+
+  const convertToQrcode = async (qrData) => {
+    setLoading(true);
+    setQr("");
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const imageUrl = qrData?.imageUrl || qrData;
+
+    try {
+      const qrCodeData = await QRCode.toDataURL(imageUrl);
+      setQr(qrCodeData);
+    } catch (error) {
+      console.log("Error generating QR:", error);
+      toast.error("Error generating QR");
+    }
+
+    setLoading(false);
+  };
+
+  const handleCopy = async (qrData) => {
+    const imageUrl = qrData?.imageUrl || qrData;
+    try {
+      await navigator.clipboard.writeText(imageUrl);
+      console.log("Copied!");
+    } catch (err) {
+      console.log("Failed to copy", err);
+    }
   };
 
   const store = {
@@ -96,6 +137,16 @@ export const AppProvider = ({ children }) => {
     handleToggleDeleteModal,
     handleOpenEdit,
     edit,
+    handleOpenQr,
+    openQr,
+    setQr,
+    setLoading,
+    qr,
+    loading,
+    convertToQrcode,
+    handleOpenQrUpdate,
+    openQrUpdate,
+    handleCopy,
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;
