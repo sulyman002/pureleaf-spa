@@ -24,9 +24,16 @@ const Profile = () => {
   const { mutateAsync: updateBusiness } = updateBusinessProfile();
   const { data: profile, isLoading } = useAuthProfile();
   const [selectedFileName, setSelectedFileName] = useState("");
-  const [logoPreview, setLogoPreview] = useState(
-    profile?.businessProfile?.logo || ""
-  );
+  const [logoPreview, setLogoPreview] = useState(null);
+
+  useEffect(() => {
+    if (profile?.businessProfile?.logoUrl) {
+      setLogoPreview(profile?.businessProfile?.logoUrl);
+    }
+  }, [profile]);
+
+  console.log(profile?.businessProfile);
+  
 
   const navigate = useNavigate();
 
