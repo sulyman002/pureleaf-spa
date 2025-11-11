@@ -19,6 +19,8 @@ export const AppProvider = ({ children }) => {
   const [qr, setQr] = useState("");
   const [loading, setLoading] = useState(false);
   const [openQrUpdate, setOpenQrUpdate] = useState(false);
+  const [filterValue, setFilterValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const uploadToServer = async (file) => {
     if (!file) return;
@@ -147,6 +149,10 @@ export const AppProvider = ({ children }) => {
     handleOpenQrUpdate,
     openQrUpdate,
     handleCopy,
+    setFilterValue,
+    filterValue,
+    inputValue,
+    setInputValue
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;

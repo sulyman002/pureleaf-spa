@@ -12,10 +12,12 @@ import { Search } from "lucide-react";
 import EmptyMenu from "../components/EmptyMenu";
 import { useFilledData } from "../services/pureLeafRequest";
 import FilledMenu from "../components/FilledMenu";
+import useAppContext from "../context/useAppContext";
 
 const Menu = () => {
-
-  const { data: cardData } = useFilledData();
+  
+  const { data: cardData,  } = useFilledData();
+  const { filterValue, setFilterValue, setInputValue, inputValue } = useAppContext();
   const data = cardData || [];
 
 
@@ -34,10 +36,14 @@ const Menu = () => {
           </p>
         </div>
         <div className="flex items-center w-full md:w-auto gap-2 py-2.5 px-3.5 rounded-lg border border-gray-300 ">
-          <Search size={20} className="text-gray-500 cursor-pointer" />
+          <Search onClick={() => setFilterValue(inputValue)} size={20} className="text-gray-500 cursor-pointer" />
           <input
             type="text"
             placeholder="Search menus"
+            value={filterValue}
+            onChange={(e) => {
+              setInputValue(e.target.value)
+            }}
             className="outline-none placeholder-gray-500 text-base text-gray-900 "
           />
         </div>

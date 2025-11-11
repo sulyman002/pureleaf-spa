@@ -6,14 +6,14 @@ import { resolution } from "../data/data";
 import { ChevronDown } from "lucide-react";
 import qr_bg from "../assets/qr_bg.jpg";
 import transparent from "../assets/transparent.png";
-import bar_code from "../assets/bar_code.png";
+// import bar_code from "../assets/bar_code.png";
 import { toast } from "sonner";
 
 const QrUpdate = () => {
   const { handleCopy, handleOpenQrUpdate, data: qrData, qr } = useAppContext();
   const [select, setSelect] = useState(resolution[0]);
   const [option, setOption] = useState("background");
-  const [qrBg, setQrBg] = useState(bar_code);
+  const [qrBg, setQrBg] = useState(null);
   const link = qrData?.imageUrl;
 
   const handleOptionChange = (event) => {
@@ -50,12 +50,21 @@ const QrUpdate = () => {
                 />
                 <p className="font-400 text-base text-[#101828]">
                   With image background{" "}
-                  <label htmlFor="changeInput">
-                    changeInput
+                  <label
+                    htmlFor="changeImage"
+                    className="underline cursor-pointer"
+                  >
+                    (change image)
                   </label>
-                  <input type="file" className="hidden" onChange={(e) => {
-                    setQrBg(e.target.files?.[0])
-                  }} />
+                  <input
+                    type="file"
+                    id="changeImage"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      setQrBg(file ? URL.createObjectURL(file) : null);
+                    }}
+                  />
                   {/* <span className="text-[#5C2E1B] underline cursor-pointer">
                     (Change image)
                   </span> */}
@@ -130,11 +139,11 @@ const QrUpdate = () => {
           </div>
 
           <div
-            style={
-              option === "background"
-                ? { backgroundImage: `url(${qrBg || qr_bg})` }
-                : { backgroundImage: `url(${transparent})` }
-            }
+            style={{
+              backgroundImage: `url(${
+                option === "background" ? qrBg || qr_bg : transparent
+              })`,
+            }}
             className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-12 backdrop-blur-lg rounded-md"
           >
             {/* logo should be here */}
@@ -143,14 +152,14 @@ const QrUpdate = () => {
               <p className="">LOGO SHOULD BE HERE</p>
             </div>
             <p
-              className={`"font-600 font-semibold text-2xl ${
+              className={`font-600 font-semibold text-2xl ${
                 option === "transparent" ? "text-gray-900" : "text-white"
               } `}
             >
               Scan for Breakfast Menu
             </p>
             <div className="mt-4">
-             <div className="h-90">
+              <div className="h-90">
                 <img src={qr} alt="bar code" className="h-full w-full" />
               </div>
             </div>

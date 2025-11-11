@@ -33,8 +33,10 @@ const FilledMenu = () => {
     handleOpenQr,
     openQr,
     convertToQrcode,
+    filterValue,
     setUploadFile,
     uploadFile,
+
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
@@ -44,10 +46,12 @@ const FilledMenu = () => {
   );
   console.log(cardData);
 
-  const filterData =
+  const filterByCategory =
     filterBy === "All"
       ? pureLeafData
       : pureLeafData.filter((item) => item.category === filterBy);
+
+      const filterData = filterByCategory.filter((item) => item?.name.toLowerCase().includes(filterValue.toLowerCase()));
 
   useEffect(() => {
     const updateCols = () => {
@@ -167,7 +171,7 @@ const FilledMenu = () => {
             My Menu
           </p>
           <div className="w-7 h-6.5 rounded-md border border-[#CEBFBA] bg-[#F3ECE9] text-xs font-medium font-500 text-[#5C2E1B] flex items-center justify-center ">
-            8
+            {filterData.length}
           </div>
         </div>
         {/* filter by */}
