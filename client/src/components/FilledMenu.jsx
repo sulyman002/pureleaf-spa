@@ -3,6 +3,7 @@ import {
   ChevronDown,
   CloudUpload,
   Eye,
+  File,
   SquarePen,
   Trash2,
   Utensils,
@@ -32,7 +33,7 @@ const FilledMenu = () => {
     createNew,
     handleOpenQr,
     openQr,
-    convertToQrcode,
+    convertToQrCode,
     filterValue,
     setUploadFile,
     uploadFile,
@@ -53,19 +54,19 @@ const FilledMenu = () => {
 
       const filterData = filterByCategory.filter((item) => item?.name.toLowerCase().includes(filterValue.toLowerCase()));
 
-  useEffect(() => {
-    const updateCols = () => {
-      if (window.innerWidth < 640) setCols(1);
-      else if (window.innerWidth < 760) setCols(2);
-      else if (window.innerWidth < 1024) setCols(3);
-      else setCols(4);
-    };
-    updateCols();
+  // useEffect(() => {
+  //   const updateCols = () => {
+  //     if (window.innerWidth < 640) setCols(1);
+  //     else if (window.innerWidth < 760) setCols(2);
+  //     else if (window.innerWidth < 1024) setCols(3);
+  //     else setCols(4);
+  //   };
+  //   updateCols();
 
-    window.addEventListener("resize", updateCols);
+  //   window.addEventListener("resize", updateCols);
 
-    return () => window.removeEventListener("resize", updateCols);
-  }, []);
+  //   return () => window.removeEventListener("resize", updateCols);
+  // }, []);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -120,12 +121,12 @@ const FilledMenu = () => {
   }, [pureLeafData]);
 
   return (
-    <div className="flex flex-col gap-6 py-5 ">
+    <div className="flex flex-col gap-8 py-5 ">
       {/* upload section */}
       <div
         onDrop={handleOnDrop}
         onDragOver={handleDragOver}
-        className="flex flex-col items-center justify-center py-4 px-6 gap-3 shadow-xs border border-gray-100 w-full"
+        className="relative flex flex-col items-center mx-4 border-dotted md:mx-8 rounded-lg justify-center py-10 gap-3 shadow-xs border border-gray-400 "
       >
         <div className="h-10 w-10 rounded-full border-[6px] border-gray-100 bg-gray-200 flex items-center justify-center">
           <CloudUpload size={20} className="text-gray-600" />
@@ -160,6 +161,10 @@ const FilledMenu = () => {
             Upload your PDF or image menus and they’ll be instantly available
             via QR codes. Max size: 10MB
           </p>
+        </div>
+
+        <div className="absolute bottom-1/4 right-1/7 w-12 h-12 rounded-md flex items-center justify-center bg-white shadow-md hover:shadow-2xl transition-all duration-300 cursor-grab ">
+          <File className="w-4 h-5 text-gray-400 font-500 font-bold" />
         </div>
         {createNew && <CreateMenu />}
       </div>
@@ -269,7 +274,7 @@ const FilledMenu = () => {
                 <div
                   onClick={() => {
                     handleOpenQr();
-                    convertToQrcode(data?.imageUrl);
+                    convertToQrCode(data?.imageUrl);
                     setData(data);
                   }}
                   className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center "
@@ -279,11 +284,11 @@ const FilledMenu = () => {
               </div>
             </div>
 
-            {(index + 1) % cols === 0 && (
+            {/* {(index + 1) % cols === 0 && (
               <div className={`col-span-${cols}`}>
                 <hr className="my-4 border-gray-300" />
               </div>
-            )}
+            )} */}
           </React.Fragment>
         ))}
       </div>

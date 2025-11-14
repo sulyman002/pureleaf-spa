@@ -1,7 +1,8 @@
 // import axios from "axios";
 import { createContext, useState } from "react";
 import { toast } from "sonner";
-import QRCode from "qrcode";
+// import QRCode from "qrcode";
+import QRCodeStyling from "qr-code-styling";
 
 export const AppContext = createContext({});
 
@@ -76,6 +77,10 @@ export const AppProvider = ({ children }) => {
     } else {
       toast.error("Please upload a valid PDF file.");
     }
+
+    setUploadFile(null);
+    setUploadProgress(0);
+    setUploadStatus("idle");
   };
 
   const handleToggleDeleteModal = () => {
@@ -84,28 +89,55 @@ export const AppProvider = ({ children }) => {
 
   const handleOpenEdit = () => {
     setEdit((prev) => !prev);
-    console.log("you clicked this sulyman");
-    console.log(edit);
   };
 
-  const convertToQrcode = async (qrData) => {
-    setLoading(true);
-    setQr("");
+  const convertToQrCode = async (qrData) => {
+  setLoading(true);
+  setQr(null);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const imageUrl = qrData?.imageUrl || qrData;
+  const imageUrl = qrData?.imageUrl || qrData;
 
-    try {
-      const qrCodeData = await QRCode.toDataURL(imageUrl);
-      setQr(qrCodeData);
-    } catch (error) {
-      console.log("Error generating QR:", error);
-      toast.error("Error generating QR");
-    }
-
+  if (!imageUrl) {
+    toast.error("Invalid QR data");
     setLoading(false);
-  };
+    return;
+  }
+
+  try {
+    const qrCode = new QRCodeStyling({
+      // width: 400,
+      // height: 500,
+      data: imageUrl,
+      dotsOptions: {
+        color: "#000",
+        type: "rounded",
+      },
+      cornersSquareOptions: {
+        type: "extra-rounded",
+      },
+      cornersDotOptions: {
+        type: "dot",
+      },
+      image: "/t-rex.png",
+      imageOptions: {
+        crossOrigin: "anonymous",
+        margin: 2,
+        imageSize: 0.22,
+      },
+    });
+
+    setQr(qrCode);
+
+  } catch (error) {
+    console.log("Error generating QR:", error);
+    toast.error("Error generating QR");
+  }
+
+  setLoading(false);
+};
+
 
   const handleCopy = async (qrData) => {
     const imageUrl = qrData?.imageUrl || qrData;
@@ -145,14 +177,14 @@ export const AppProvider = ({ children }) => {
     setLoading,
     qr,
     loading,
-    convertToQrcode,
+    convertToQrCode,
     handleOpenQrUpdate,
     openQrUpdate,
     handleCopy,
     setFilterValue,
     filterValue,
     inputValue,
-    setInputValue
+    setInputValue,
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;

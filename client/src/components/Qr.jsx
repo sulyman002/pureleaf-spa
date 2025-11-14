@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 // import bar_code from "../assets/bar_code.png";
 import useAppContext from "../context/useAppContext";
 import { X } from "lucide-react";
@@ -20,6 +20,17 @@ const Qr = () => {
   const link = qrData?.imageUrl;
   const cleanLink = link?.replace(/^https?:\/\//, "");
 
+  useEffect(() => {
+    if(qr) {
+      const container = document.getElementById("qr-container");
+
+      if(container) {
+        container.innerHTML = "";
+        qr.append(container);
+      }
+    }
+  }, [qr]);
+
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white px-5 mx-5 md:mx-0 w-[644px] rounded-xl flex flex-col gap-2   py-8">
@@ -33,17 +44,17 @@ const Qr = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center gap-3 w-full py-6 px-10">
+          <div className="flex items-center justify-center w-full">
             {loading && <p>Generating QR Code...</p>}
             {!loading && qr && (
-              <div className="h-90">
-                <img src={qr} alt="bar code" className="h-full w-full" />
+              <div className="w-full">
+                <div className="bg-red-400 w-full" id="qr-container"></div>
               </div>
             )}
           </div>
-          <p className="text-gray-500 text-sm text-center ">{cleanLink}</p>
         </div>
+          <p className="text-gray-500 text-sm text-center ">{cleanLink}</p>
 
         <div className="flex items-center w-full gap-3 mt-5">
           <button

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import useAppContext from "../context/useAppContext";
 import { Listbox } from "@headlessui/react";
@@ -19,6 +19,17 @@ const QrUpdate = () => {
   const handleOptionChange = (event) => {
     setOption(event.target.value);
   };
+
+  useEffect(() => {
+    if (qr) {
+      const container = document.getElementById("qr-container");
+
+      if (container) {
+        container.innerHTML = "";
+        qr.append(container);
+      }
+    }
+  }, [qr]);
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white rounded-xl w-[800px] flex flex-col gap-2   py-8">
@@ -160,7 +171,12 @@ const QrUpdate = () => {
             </p>
             <div className="mt-4">
               <div className="h-90">
-                <img src={qr} alt="bar code" className="h-full w-full" />
+                {/* {loading && <p>Generating QR Code...</p>} */}
+                {qr && (
+                  
+                    <div className="" id="qr-container"></div>
+                
+                )}
               </div>
             </div>
           </div>

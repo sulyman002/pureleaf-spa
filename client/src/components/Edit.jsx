@@ -57,7 +57,7 @@ const Edit = () => {
   };
 
   return (
-    <div className="fixed flex items-center justify-center z-[999] inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
+    <div className="fixed flex items-center justify-center z-999 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white w-[644px] rounded-xl flex flex-col gap-2   py-8">
         <div className="border-b border-gray-200">
           <div className="flex items-center px-5 justify-between py-6 border-b border-gray-200">
@@ -145,9 +145,9 @@ const Edit = () => {
               <option value="" defaultValue="Select location">
                 Food
               </option>
-              <option value="a">a</option>
-              <option value="b">b</option>
-              <option value="c">c</option>
+              <option value="Rice">Rice</option>
+              <option value="Spaghetti">Spaghetti </option>
+              <option value="Chicken & Chips">Chicken & Chips</option>
             </select>
           </div>
 

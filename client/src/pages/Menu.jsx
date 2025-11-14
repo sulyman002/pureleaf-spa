@@ -24,7 +24,7 @@ const Menu = () => {
 
  
   return (
-    <div className="w-full">
+    <div className="w-full gap-8">
       <div className="flex items-start justify-between gap-6 flex-col md:flex-row px-4 md:px-8 py-8 border-b border-gray-200 shadow">
         <div className="flex flex-col gap-1">
           <h2 className="text-[30px] text-gray-900 tracking-[-2px] font-500 ">
