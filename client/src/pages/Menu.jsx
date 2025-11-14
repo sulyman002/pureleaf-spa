@@ -40,7 +40,7 @@ const Menu = () => {
           <input
             type="text"
             placeholder="Search menus"
-            value={filterValue}
+            value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value)
             }}

@@ -172,7 +172,7 @@ const Register = () => {
 
                     navigate("/forgot-password");
                   }}
-                  className=" cursor-pointer text-red-500 "
+                  className=" cursor-pointer text-red-500 flex justify-end "
                 >
                   Forget password?
                 </p>
