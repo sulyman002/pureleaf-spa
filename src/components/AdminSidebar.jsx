@@ -2,9 +2,10 @@ import { SquarePen } from "lucide-react";
 import { links } from "../data/data";
 import * as Icons from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import useAuth from "../context/useAuth.js";
+import { useEffect } from "react";
 
 const AdminSidebar = () => {
   const { user, logout } = useAuth();
@@ -16,6 +17,22 @@ const AdminSidebar = () => {
   const shortText =
     text.length > 10 ? text.slice(0, position + 1) + "..." : text;
   const [useMenu, setUserMenu] = useState(false);
+
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleCLickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setUserMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleCLickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleCLickOutside)
+    };
+  }, []);
 
   const handleUSerMenu = () => {
     setUserMenu(!useMenu);
@@ -88,7 +105,7 @@ const AdminSidebar = () => {
           <Icons.EllipsisVertical size={20} className="text-gray-600" />
 
           {useMenu && (
-            <div className="px-5 gap-3 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 ">
+            <div ref={modalRef} className="px-5 gap-3 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 ">
               <div className="flex ">
                 <div className="flex-1 flex items-center gap-3 ">
                   <img
