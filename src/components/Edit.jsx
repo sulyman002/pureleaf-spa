@@ -1,4 +1,4 @@
-import { CircleCheck, RotateCw, Trash2, X } from "lucide-react";
+import { CircleCheck, File, RotateCw, Trash2, X } from "lucide-react";
 import React, { useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { ChevronDown } from "lucide-react";
@@ -6,6 +6,8 @@ import useAppContext from "../context/useAppContext";
 import { useUpdateData } from "../services/pureLeafRequest";
 import { descriptions } from "../data/data";
 import { toast } from "sonner";
+import { useEffect } from "react";
+import axios from "axios";
 
 const Edit = () => {
   const {
@@ -13,10 +15,12 @@ const Edit = () => {
     data: editData,
     uploadFile,
     uploadProgress,
+    uploadStatus,
     handleFileUpload,
     setUploadFile,
     setUploadProgress,
     setFieldData,
+    setUploadStatus,
   } = useAppContext();
   const [description, setDescription] = useState(descriptions[0]);
   const { mutate: updateData } = useUpdateData();
@@ -25,8 +29,38 @@ const Edit = () => {
     oldFile: editData?.imageUrl,
     newFile: null,
   });
+  const [grabOld, setGrabOld] = useState();
   const fileInputId = React.useId();
-  console.log(editData);
+  // console.log("old", formData?.oldFile);
+  // console.log("new", formData?.newFile);
+   
+
+  useEffect(() => {
+    if (formData?.oldFile) {
+      axios
+        .head(formData.oldFile)
+        .then((response) => {
+          const oldFileSize = response.headers["content-length"];
+          const oldFileName = formData.oldFile.split("/").pop();
+
+          const oldFileData = {
+            name: oldFileName,
+            size: oldFileSize,
+          };
+
+          setGrabOld(oldFileData);
+
+          console.log("File name:", oldFileName);
+          console.log("File size in bytes:", oldFileSize);
+        })
+        .catch((err) => console.error(err));
+
+      setUploadProgress(100);
+      setUploadStatus("completed");
+    }
+  }, [formData?.oldFile, setUploadProgress, setUploadStatus]);
+
+  console.log(grabOld);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +69,6 @@ const Edit = () => {
       [name]: value,
     }));
   };
-
-  console.log(editData);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -49,6 +81,7 @@ const Edit = () => {
     }
 
     updatedFormData.append("name", formData?.name);
+
 
     updateData({
       id: editData?.id,
@@ -94,7 +127,7 @@ const Edit = () => {
 
             <div className="relative w-full">
               <Listbox
-                value={location}
+                value={description}
                 onChange={(value) => {
                   setDescription(value);
                   setFieldData((prev) => ({
@@ -159,7 +192,9 @@ const Edit = () => {
             <div className="rounded-lg  border border-[#AD968C] p-4 flex w-full  ">
               <div className="flex gap-4 w-full ">
                 {/* image */}
-                <div className=""></div>
+                <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
+                  <File size={16} className="text-[#5C2E1B]"/>
+                </div>
                 {/* another content */}
                 <div className="flex gap-1 flex-col w-full">
                   {/* name and size */}
@@ -172,22 +207,15 @@ const Edit = () => {
                       </span>
                     </div>
                   ) : (
-                    <a
-                      href={formData.oldFile}
-                      target="_blank"
-                      rel="noreferrer"
-                      className=" text-sm"
-                    >
-                      View existing PDF
-                    </a>
+                    <div className="text-gray-700 text-sm font-500">
+                      <span>{grabOld?.name}</span>
+                      <br />
+                      <span className="text-gray-500 font-400">
+                        {Math.round(grabOld?.size / 1024)} KB
+                      </span>
+                    </div>
                   )}
-                  {/* <div className="text-gray-700 text-sm font-500">
-                    <span>{uploadFile?.name}</span>
-                    <br />
-                    <span className="text-gray-500 font-400">
-                      {Math.round(uploadFile?.size / 1024)} KB
-                    </span>
-                  </div> */}
+
                   {/* tracker line and change image icon */}
                   <div className="w-full flex items-center gap-3 py-1">
                     <div className="h-2 rounded-full w-full bg-[#F9F5FF] ">
@@ -201,38 +229,30 @@ const Edit = () => {
                     </p>
                   </div>
 
-                  <div
-                    onClick={() => {
-                      setUploadFile(null);
-                      setUploadProgress(0);
-                      document.getElementById(fileInputId).value = "";
-                    }}
-                  >
-                    {/* Hidden input */}
-                    <input
-                      type="file"
-                      name="file"
-                      id={fileInputId}
-                      className="hidden"
-                      accept="application/pdf"
-                      onChange={handleFileUpload}
-                    />
+                  {/* Hidden input */}
+                  <input
+                    type="file"
+                    name="file"
+                    id={fileInputId}
+                    className="hidden"
+                    accept="application/pdf"
+                    onChange={handleFileUpload}
+                  />
 
-                    {/* Custom upload button */}
-                    <label
-                      htmlFor={fileInputId}
-                      className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
-                    >
-                      <RotateCw size={16} />
-                      <span>Replace image</span>
-                    </label>
-                  </div>
+                  {/* Custom upload button */}
+                  <label
+                    htmlFor={fileInputId}
+                    className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
+                  >
+                    <RotateCw size={16} />
+                    <span>Replace image</span>
+                  </label>
                 </div>
               </div>
 
               {/* trash */}
               <div className="">
-                {uploadProgress === 100 ? (
+                {uploadStatus === "completed" ? (
                   <CircleCheck size={16} className="text-[#5C2E1B] " />
                 ) : (
                   <Trash2

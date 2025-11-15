@@ -12,6 +12,8 @@ const AdminSidebar = () => {
 
   const location = useLocation();
   const text = user ? user.email : "";
+  console.log(user);
+  
   const position = text.indexOf("@");
 
   const shortText =
