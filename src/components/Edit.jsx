@@ -32,8 +32,12 @@ const Edit = () => {
   const [grabOld, setGrabOld] = useState();
   const fileInputId = React.useId();
   // console.log("old", formData?.oldFile);
+  console.log(editData);
+  
   // console.log("new", formData?.newFile);
-   
+  useEffect(() => {
+    console.log("uploadFile changed:", uploadFile);
+  }, [uploadFile]);
 
   useEffect(() => {
     if (formData?.oldFile) {
@@ -60,8 +64,6 @@ const Edit = () => {
     }
   }, [formData?.oldFile, setUploadProgress, setUploadStatus]);
 
-  console.log(grabOld);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -81,7 +83,9 @@ const Edit = () => {
     }
 
     updatedFormData.append("name", formData?.name);
-
+    if(formData?.newFile) {
+      updatedFormData.append("file", formData?.newFile)
+    }
 
     updateData({
       id: editData?.id,
@@ -193,7 +197,7 @@ const Edit = () => {
               <div className="flex gap-4 w-full ">
                 {/* image */}
                 <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
-                  <File size={16} className="text-[#5C2E1B]"/>
+                  <File size={16} className="text-[#5C2E1B]" />
                 </div>
                 {/* another content */}
                 <div className="flex gap-1 flex-col w-full">
@@ -236,7 +240,16 @@ const Edit = () => {
                     id={fileInputId}
                     className="hidden"
                     accept="application/pdf"
-                    onChange={handleFileUpload}
+                    onChange={(e) => {
+                      handleFileUpload(e);
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          newFile: file, // ← IMPORTANT
+                        }));
+                      }
+                    }}
                   />
 
                   {/* Custom upload button */}

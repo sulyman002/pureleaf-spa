@@ -45,7 +45,7 @@ const FilledMenu = () => {
     () => cardData.data.data || [],
     [cardData.data.data]
   );
-  console.log(cardData);
+  // console.log(cardData);
 
   const filterByCategory =
     filterBy === "All"
@@ -54,19 +54,7 @@ const FilledMenu = () => {
 
       const filterData = filterByCategory.filter((item) => item?.name.toLowerCase().includes(filterValue.toLowerCase()));
 
-  // useEffect(() => {
-  //   const updateCols = () => {
-  //     if (window.innerWidth < 640) setCols(1);
-  //     else if (window.innerWidth < 760) setCols(2);
-  //     else if (window.innerWidth < 1024) setCols(3);
-  //     else setCols(4);
-  //   };
-  //   updateCols();
 
-  //   window.addEventListener("resize", updateCols);
-
-  //   return () => window.removeEventListener("resize", updateCols);
-  // }, []);
 
   const handleDragOver = (e) => {
     e.preventDefault();

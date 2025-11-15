@@ -55,37 +55,9 @@ export const AppProvider = ({ children }) => {
     }
 
     setUploadFile(file);
-    setFormData(prev => ({ ...prev, newFile: file }));
     console.log("Selected file:", file);
-    await uploadToServer(file); 
+    await uploadToServer(file);
   };
-
-  //   const handleFileUpload = async (e) => {
-  //     const file = e.target.files?.[0];
-  //     if (!file) return;
-
-  //     const isPDF = file.type === "application/pdf";
-
-  //     if (!isPDF) {
-  //       toast.error("Please upload a valid PDF file.");
-  //       return;
-  //     }
-
-  //     setUploadFile(file);
-  //     setUploadStatus("uploading");
-  //     setUploadProgress(0);
-
-  //     try {
-  //       await uploadToServer(file);
-  //       setUploadStatus("success");
-  //       toast.success("File uploaded successfully!");
-  //     } catch (error) {
-  //       setUploadStatus("error");
-  //       toast.error("Failed to upload file.");
-  //     } finally {
-  //       setUploadProgress(0);
-  //     }
-  //   };
 
   const handleToggleDeleteModal = () => {
     setOpenDeleteModal((prev) => !prev);
