@@ -262,7 +262,7 @@ const FilledMenu = () => {
                 <div
                   onClick={() => {
                     handleOpenQr();
-                    convertToQrCode(data?.imageUrl);
+                    convertToQrCode(data);
                     setData(data);
                   }}
                   className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center "

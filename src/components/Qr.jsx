@@ -20,16 +20,16 @@ const Qr = () => {
   const link = qrData?.imageUrl;
   const cleanLink = link?.replace(/^https?:\/\//, "");
 
-  useEffect(() => {
-    if(qr) {
-      const container = document.getElementById("qr-container");
+  // useEffect(() => {
+  //   if(qr) {
+  //     const container = document.getElementById("qr-container");
 
-      if(container) {
-        container.innerHTML = "";
-        qr.append(container);
-      }
-    }
-  }, [qr]);
+  //     if(container) {
+  //       container.innerHTML = "";
+  //       qr.append(container);
+  //     }
+  //   }
+  // }, [qr]);
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -49,7 +49,8 @@ const Qr = () => {
             {loading && <p>Generating QR Code...</p>}
             {!loading && qr && (
               <div className="w-full">
-                <div className="bg-red-400 w-full" id="qr-container"></div>
+                <img src={qr} alt="qr-code" className="" />
+                {/* <div className="bg-red-400 w-full" id="qr-container"></div> */}
               </div>
             )}
           </div>

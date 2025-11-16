@@ -1,14 +1,20 @@
 import { SquarePen } from "lucide-react";
 import { links } from "../data/data";
 import * as Icons from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import useAuth from "../context/useAuth.js";
 import { useEffect } from "react";
+import { useAuthProfile } from "../services/pureLeafRequest.js";
 
 const AdminSidebar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const {data: profileData} = useAuthProfile();
+  console.log(profileData?.businessProfile.logoUrl);
+  const profilePics = profileData?.businessProfile.logoUrl;
+  
 
   const location = useLocation();
   const text = user ? user.email : "";
@@ -48,7 +54,7 @@ const AdminSidebar = () => {
           </p>
           <div className="flex flex-col gap-2 text-xs ">
             <p className="text-[#667085] ">Name of software here</p>
-            <div className="gap-1 flex items-center text-sm font-500 text-gray-900 ">
+            <div onClick={() => navigate("/admin/settings/profile")} className="cursor-pointer gap-1 flex items-center text-sm font-500 text-gray-900 ">
               <span>Clear Essence</span>
               <SquarePen size={11.74} className="text-gray-900" />
             </div>
@@ -88,14 +94,14 @@ const AdminSidebar = () => {
       <div className="flex py-4 border-t border-gray-200 px-5">
         <div className="flex-1 flex items-center gap-3 w-4/5 ">
           <img
-            src=""
+            src={profilePics}
             alt="profile_icon"
             width="40"
             height="40"
             className="rounded-full"
           />
           <div className="flex flex-col gap-2 text-[14px] ">
-            <p className="text-[#404652] font-500 ">{user?.name}</p>
+            <p className="text-[#404652] font-500 ">{profileData?.name}</p>
             <p className="text-[#404652] font-400">{shortText}</p>
           </div>
         </div>
@@ -111,14 +117,14 @@ const AdminSidebar = () => {
               <div className="flex ">
                 <div className="flex-1 flex items-center gap-3 ">
                   <img
-                    src=""
+                    src={profilePics}
                     alt="profile_icon"
                     width="40"
                     height="40"
                     className="rounded-full"
                   />
                   <div className="flex flex-col gap-2 text-[14px] ">
-                    <p className="text-[#404652] font-500 ">{user?.name}</p>
+                    <p className="text-[#404652] font-500 ">{profileData?.name}</p>
                     <p className="text-[#404652] font-400 ">{shortText}</p>
                   </div>
                 </div>

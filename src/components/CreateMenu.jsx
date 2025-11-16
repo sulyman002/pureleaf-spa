@@ -15,15 +15,12 @@ const CreateMenu = () => {
     name: "",
   });
 
-
-
   const handleChange = (e) => {
-    const {name, value} = e.target;
-      setFieldData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    
+    const { name, value } = e.target;
+    setFieldData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // console.log(fieldData);
@@ -41,6 +38,9 @@ const CreateMenu = () => {
     setUploadFile,
     setUploadProgress,
   } = useAppContext();
+
+  console.log(uploadFile);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ const CreateMenu = () => {
         setFieldData({
           name: "",
         });
-        setDescription(descriptions[0])
+        setDescription(descriptions[0]);
         setUploadProgress(0);
         setUploadFile(null);
       },
@@ -75,7 +75,6 @@ const CreateMenu = () => {
       },
     });
   };
-  
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -118,7 +117,9 @@ const CreateMenu = () => {
               }}
             >
               <Listbox.Button className=" w-full flex border-[0.6px] border-[#C8C8C8] items-center justify-between text-gray-900 rounded-lg py-3 px-3.5">
-                <p className="text-gray-500 text-base font-400 ">{description}</p>
+                <p className="text-gray-500 text-base font-400 ">
+                  {description}
+                </p>
                 <div className="">
                   <ChevronDown size={20} className=" text-gray-500" />
                 </div>
@@ -172,33 +173,25 @@ const CreateMenu = () => {
                       {uploadProgress}%
                     </p>
                   </div>
+                  {/* here */}
+                  <input
+                    type="file"
+                    name="file"
+                    id={fileInputId}
+                    className="hidden"
+                    accept="application/pdf"
+                    onChange={handleFileUpload}
+                  />
 
-                  <div
-                    onClick={() => {
-                      setUploadFile("");
-                      setUploadProgress(0);
-                      document.getElementById(fileInputId).value = "";
-                    }}
+                  {/* Custom upload button */}
+                  <label
+                    htmlFor={fileInputId}
+                    className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
                   >
-                    {/* Hidden input */}
-                    <input
-                      type="file"
-                      name="file"
-                      id={fileInputId}
-                      className="hidden"
-                      accept="application/pdf"
-                      onChange={handleFileUpload}
-                    />
-
-                    {/* Custom upload button */}
-                    <label
-                      htmlFor={fileInputId}
-                      className="cursor-pointer flex items-center gap-1 font-500 text-[#5C2E1B] text-sm "
-                    >
-                      <RotateCw size={16} />
-                      <span>Replace image</span>
-                    </label>
-                  </div>
+                    <RotateCw size={16} />
+                    <span>Replace image</span>
+                  </label>
+                  {/* here */}
                 </div>
               </div>
 

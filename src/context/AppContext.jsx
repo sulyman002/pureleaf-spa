@@ -78,9 +78,9 @@ export const AppProvider = ({ children }) => {
       toast.error("Please upload a valid PDF file.");
     }
 
-    setUploadFile(null);
-    setUploadProgress(0);
-    setUploadStatus("idle");
+    // setUploadFile(null);
+    // setUploadProgress(0);
+    // setUploadStatus("idle");
   };
 
   const handleToggleDeleteModal = () => {
@@ -107,8 +107,8 @@ export const AppProvider = ({ children }) => {
 
   try {
     const qrCode = new QRCodeStyling({
-      // width: 400,
-      // height: 500,
+      width: 1200,
+      height: 1500,
       data: imageUrl,
       dotsOptions: {
         color: "#000",
@@ -128,7 +128,10 @@ export const AppProvider = ({ children }) => {
       },
     });
 
-    setQr(qrCode);
+
+    const blob = await qrCode.getRawData("png");
+    const url = URL.createObjectURL(blob)
+    setQr(url);
 
   } catch (error) {
     console.log("Error generating QR:", error);
