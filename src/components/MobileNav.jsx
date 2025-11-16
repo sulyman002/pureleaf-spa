@@ -8,6 +8,7 @@ import useAuth from "../context/useAuth.js";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useAuthProfile } from "../services/pureLeafRequest.js";
+import useAppContext from "../context/useAppContext.js";
 
 
 const MobileNav = () => {
@@ -18,6 +19,7 @@ const MobileNav = () => {
    const {data: profileData} = useAuthProfile();
     console.log(profileData?.businessProfile.logoUrl);
     const profilePics = profileData?.businessProfile.logoUrl;
+    const { logoImg } = useAppContext();
 
   const text = user ? user.email : "";
     // console.log(user);
@@ -38,7 +40,9 @@ const MobileNav = () => {
    
     <div className=" flex md:hidden border-b border-[#F0ECEB] shadow py-4 px-4 items-center justify-between ">
       {/* logo */}
-      <div className="">logo</div>
+      <div className="">
+        <img src={logoImg} alt="logo image" className="w-30" />
+      </div>
       <div onClick={handleToggleNav} className="cursor-pointer">
         <CgMenuLeftAlt size={24} className="text-gray-500 " />
       </div>
@@ -49,7 +53,9 @@ const MobileNav = () => {
         <div className="fixed inset-0 bg-[#34405499] min-h-full flex backdrop-blur-2xl z-99 ">
           <div className=" flex flex-col h-screen w-4/5 bg-white transition-all duration-300 ">
             <div className="flex-1 flex py-4 px-3 gap-5 flex-col  ">
-              <div className="">logo</div>
+              <div className="">
+                <img src={logoImg} alt="logo image" className="w-45" />
+              </div>
               <div className="gap-1">
                 {links.map((link, index) => {
                   const Icon = Icons[link.icon];
