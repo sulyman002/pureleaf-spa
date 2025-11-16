@@ -17,7 +17,7 @@ import useAppContext from "../context/useAppContext";
 const Menu = () => {
   
   const { data: cardData,  } = useFilledData();
-  const { filterValue, setFilterValue, setInputValue, inputValue } = useAppContext();
+  const { setFilterValue, setInputValue, inputValue } = useAppContext();
   const data = cardData || [];
 
 

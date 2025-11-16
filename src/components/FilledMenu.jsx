@@ -35,8 +35,6 @@ const FilledMenu = () => {
     openQr,
     convertToQrCode,
     filterValue,
-    
-
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
@@ -51,11 +49,9 @@ const FilledMenu = () => {
       ? pureLeafData
       : pureLeafData.filter((item) => item.category === filterBy);
 
-      const filterData = filterByCategory.filter((item) => item?.name.toLowerCase().includes(filterValue.toLowerCase()));
-
-
-  
-      
+  const filterData = filterByCategory.filter((item) =>
+    item?.name.toLowerCase().includes(filterValue.toLowerCase())
+  );
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -86,8 +82,7 @@ const FilledMenu = () => {
   };
 
   const fileInputId = React.useId();
-  console.log(filterData);
-  
+  console.log("filter data pure", pureLeafData);
 
   useEffect(() => {
     const fetchSizes = async () => {
@@ -97,11 +92,11 @@ const FilledMenu = () => {
         try {
           const response = await axios.head(item.imageUrl);
           const size = response.headers["content-length"];
-          sizes[item._id] = size
+          sizes[item.id] = size
             ? (size / (1024 * 1024)).toFixed(2) + " MB"
             : "Unknown";
         } catch {
-          sizes[item._id] = "Unknown";
+          sizes[item.id] = "Unknown";
         }
       }
 
@@ -122,7 +117,7 @@ const FilledMenu = () => {
         <div className="h-10 w-10 rounded-full border-[6px] border-gray-100 bg-gray-200 flex items-center justify-center">
           <CloudUpload size={20} className="text-gray-600" />
         </div>
-        <div className="flex flex-col gap-1 text-sm text-center text-gray-500">
+        <div className="flex flex-col gap-1 text-sm text-center text-gray-500 px-8 ">
           {/* click to upload */}
           <div>
             {/* Hidden input */}
@@ -154,7 +149,7 @@ const FilledMenu = () => {
           </p>
         </div>
 
-        <div className="absolute bottom-1/4 right-1/7 w-12 h-12 rounded-md flex items-center justify-center bg-white shadow-md hover:shadow-2xl transition-all duration-300 cursor-grab ">
+        <div className="hidden lg:flex absolute lg:right-1/7 lg:bottom-2/4 xl:bottom-1/4 xl:right-1/7 w-12 h-12 rounded-md items-center justify-center bg-white shadow-md hover:shadow-2xl transition-all duration-300 cursor-grab ">
           <File className="w-4 h-5 text-gray-400 font-500 font-bold" />
         </div>
         {createNew && <CreateMenu />}
@@ -263,7 +258,7 @@ const FilledMenu = () => {
                 </div>
 
                 <div
-                  onClick={ async () => {
+                  onClick={async () => {
                     handleOpenQr();
                     await convertToQrCode(data);
                     setData(data);
@@ -274,7 +269,6 @@ const FilledMenu = () => {
                 </div>
               </div>
             </div>
-
           </React.Fragment>
         ))}
       </div>
