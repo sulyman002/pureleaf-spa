@@ -55,6 +55,8 @@ const FilledMenu = () => {
       const filterData = filterByCategory.filter((item) => item?.name.toLowerCase().includes(filterValue.toLowerCase()));
 
 
+  
+      
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -85,6 +87,8 @@ const FilledMenu = () => {
   };
 
   const fileInputId = React.useId();
+  console.log(filterData);
+  
 
   useEffect(() => {
     const fetchSizes = async () => {
@@ -260,9 +264,9 @@ const FilledMenu = () => {
                 </div>
 
                 <div
-                  onClick={() => {
+                  onClick={ async () => {
                     handleOpenQr();
-                    convertToQrCode(data);
+                    await convertToQrCode(data);
                     setData(data);
                   }}
                   className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg text-white bg-[#5C2E1B] flex items-center justify-center "
@@ -272,11 +276,6 @@ const FilledMenu = () => {
               </div>
             </div>
 
-            {/* {(index + 1) % cols === 0 && (
-              <div className={`col-span-${cols}`}>
-                <hr className="my-4 border-gray-300" />
-              </div>
-            )} */}
           </React.Fragment>
         ))}
       </div>

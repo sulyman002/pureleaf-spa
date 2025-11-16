@@ -30,6 +30,7 @@ const Qr = () => {
   //     }
   //   }
   // }, [qr]);
+console.log(qr);
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">

@@ -10,7 +10,13 @@ import transparent from "../assets/transparent.png";
 import { toast } from "sonner";
 
 const QrUpdate = () => {
-  const { handleCopy, handleOpenQrUpdate, data: qrData, qr } = useAppContext();
+  const {
+    handleCopy,
+    handleOpenQrUpdate,
+    data: qrData,
+    qr,
+    logoImg,
+  } = useAppContext();
   const [select, setSelect] = useState(resolution[0]);
   const [option, setOption] = useState("background");
   const [qrBg, setQrBg] = useState(null);
@@ -159,8 +165,7 @@ const QrUpdate = () => {
           >
             {/* logo should be here */}
             <div className="">
-              <img src="" alt="logo" />
-              <p className="">LOGO SHOULD BE HERE</p>
+              <img src={logoImg} alt="logo-image" className="w-45" />
             </div>
             <p
               className={`font-600 font-semibold text-2xl ${
@@ -172,11 +177,7 @@ const QrUpdate = () => {
             <div className="mt-4">
               <div className="h-90">
                 {/* {loading && <p>Generating QR Code...</p>} */}
-                {qr && (
-                  
-                    <div className="" id="qr-container"></div>
-                
-                )}
+                {qr && <div className="" id="qr-container"></div>}
               </div>
             </div>
           </div>

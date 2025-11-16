@@ -14,7 +14,7 @@ import useAuth from "../context/useAuth.js";
 const Register = () => {
   const navigate = useNavigate();
 
-  const { userDetails } = useAppContext();
+  const { userDetails, logoImg } = useAppContext();
   const {
     register,
     handleSubmit,
@@ -92,7 +92,7 @@ const Register = () => {
           >
             {/* company logo */}
             <div className="flex items-center justify-center">
-              <img src="#" alt="pureleaf-spa-logo" />
+              <img src={logoImg} alt="pureleaf-spa-logo" className="w-45" />
             </div>
             <h3 className="text-center font-600 font-semi text-[30px] gray-900 ">
               {loginState === "Sign Up" ? "Sign Up" : "Welcome Back!"}
