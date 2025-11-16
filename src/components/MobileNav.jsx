@@ -7,16 +7,35 @@ import { Link, useLocation } from "react-router-dom";
 import useAuth from "../context/useAuth.js";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuthProfile } from "../services/pureLeafRequest.js";
+
+
 const MobileNav = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const location = useLocation();
   const [openNav, setOpenNav] = useState(false);
+   const {data: profileData} = useAuthProfile();
+    console.log(profileData?.businessProfile.logoUrl);
+    const profilePics = profileData?.businessProfile.logoUrl;
+
+  const text = user ? user.email : "";
+    // console.log(user);
+    
+    const position = text.indexOf("@");
+  
+    const shortText =
+      text.length > 10 ? text.slice(0, position + 1) + "..." : text;
+    
+  
+
 
   const handleToggleNav = () => {
     setOpenNav(!openNav);
   };
   return (
+
+   
     <div className=" flex md:hidden border-b border-[#F0ECEB] shadow py-4 px-4 items-center justify-between ">
       {/* logo */}
       <div className="">logo</div>
@@ -95,16 +114,16 @@ const MobileNav = () => {
                 <div className="flex py-4 border-t border-gray-200">
                   <div className="flex-1 flex items-center gap-3 ">
                     <img
-                      src=""
+                      src={profilePics}
                       alt="profile_icon"
                       width="40"
                       height="40"
                       className="rounded-full"
                     />
                     <div className="flex flex-col gap-2 text-[14px] ">
-                      <p className="text-[#404652] font-500 ">Hotel Staff</p>
+                      <p className="text-[#404652] font-500 ">{profileData?.name}</p>
                       <p className="text-[#404652] font-400">
-                        Staffsomething@clear.com
+                       {shortText}
                       </p>
                     </div>
                   </div>
