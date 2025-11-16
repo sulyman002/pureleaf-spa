@@ -67,7 +67,7 @@ const CreateMenu = () => {
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
-      <div className="bg-white w-[644px] rounded-xl flex flex-col gap-2 px-6 py-8">
+      <div className="bg-white mx-8 w-[644px] rounded-xl flex flex-col gap-2 px-6 py-8">
         <div className="flex items-center justify-between py-6 border-b border-gray-200">
           <p className="font-600 font-semibold text-2xl text-gray-900 ">
             Create New Menu
@@ -88,6 +88,8 @@ const CreateMenu = () => {
               name="name"
               onChange={handleChange}
               value={fieldData?.name}
+              minLength={3}
+              maxLength={15}
               placeholder="Enter menu name"
               className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
             />

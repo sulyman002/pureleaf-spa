@@ -93,7 +93,7 @@ const Edit = () => {
 
   return (
     <div className="fixed flex items-center justify-center z-50 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
-      <div className="bg-white w-[644px] rounded-xl flex flex-col gap-2 py-8">
+      <div className="bg-white w-[644px] mx-8 rounded-xl flex flex-col gap-2 py-8">
         <div className="border-b border-gray-200">
           <div className="flex items-center px-5 justify-between py-6 border-b border-gray-200">
             <p className="font-semibold text-2xl text-gray-900">
@@ -115,6 +115,8 @@ const Edit = () => {
             <input
               type="text"
               name="name"
+              minLength={3}
+              maxLength={15}
               value={formData?.name}
               onChange={handleChange}
               placeholder="Enter menu name"
