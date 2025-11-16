@@ -125,24 +125,7 @@ export const useAuthProfile = () => {
   });
 };
 
-// const { mutate: profile } = useAuthProfile();
 
-// useEffect(() => {
-//     const token = getItem("accessToken");
-
-//     if (!token) {
-//       return;
-//     }
-
-//     const fetchUser = async () => {
-//       const userData = await profile();
-//       if (userData) {
-//         setUser(userData);
-//         setItem("user", userData);
-//       }
-//     };
-//     fetchUser();
-//   }, []);
 
 // update or change business profile
 export const updateBusinessProfile = () => {
