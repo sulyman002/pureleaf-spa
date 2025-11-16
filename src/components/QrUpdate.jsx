@@ -28,7 +28,7 @@ const QrUpdate = () => {
 
   useEffect(() => {
     if (qr) {
-      const container = document.getElementById("qr-container");
+      const container = document.getElementById("qr-container-main");
 
       if (container) {
         container.innerHTML = "";
@@ -36,6 +36,29 @@ const QrUpdate = () => {
       }
     }
   }, [qr]);
+
+ const downloadQr = async (size) => {
+  if (!qr) return toast.error("QR code not ready yet!");
+
+  try {
+    qr.update({
+      width: size,
+      height: size,
+      backgroundOptions: {
+        color: option === "transparent" ? "rgba(0,0,0,0)" : "#ffffff",
+      },
+    });
+
+    setTimeout(() => {
+      qr.download({ extension: "png" });
+    }, 300);
+  } catch (error) {
+    console.log("Download failed:", error);
+    toast.error("Failed to download QR");
+  }
+};
+
+
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white rounded-xl w-[800px] flex flex-col gap-2   py-8">
@@ -82,9 +105,7 @@ const QrUpdate = () => {
                       setQrBg(file ? URL.createObjectURL(file) : null);
                     }}
                   />
-                  {/* <span className="text-[#5C2E1B] underline cursor-pointer">
-                    (Change image)
-                  </span> */}
+                 
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -133,7 +154,13 @@ const QrUpdate = () => {
             {/* button */}
             <div className=" flex flex-col gap-8">
               <div className="flex items-center flex-col w-full gap-3">
-                <button className="cursor-pointer w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-2.5 px-4.5 bg-[#5C2E1B] shadow-xs">
+                <button
+                  onClick={() => {
+                    const numericSize = parseInt(select.value); 
+                    downloadQr(numericSize);
+                  }}
+                  className="cursor-pointer w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-2.5 px-4.5 bg-[#5C2E1B] shadow-xs"
+                >
                   Download PNG
                 </button>
                 <button
@@ -177,7 +204,19 @@ const QrUpdate = () => {
             <div className="mt-4">
               <div className="h-90">
                 {/* {loading && <p>Generating QR Code...</p>} */}
-                {qr && <div className="" id="qr-container"></div>}
+                {qr && (
+                  <div className="flex items-center justify-center w-full">
+                    <div
+                      id="qr-container-main"
+                      className="flex items-center justify-center p-2"
+                      style={{
+                        width: "100%",
+                        maxWidth: "320px",
+                        minHeight: "200px",
+                      }}
+                    ></div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

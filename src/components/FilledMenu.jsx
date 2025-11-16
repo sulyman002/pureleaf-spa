@@ -21,7 +21,7 @@ import Qr from "../components/Qr.jsx";
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
   const [fileSizes, setFileSizes] = useState({});
-  const [cols, setCols] = useState(5);
+
   const {
     setData,
     openDeleteModal,
@@ -35,8 +35,7 @@ const FilledMenu = () => {
     openQr,
     convertToQrCode,
     filterValue,
-    setUploadFile,
-    uploadFile,
+    
 
   } = useAppContext();
 

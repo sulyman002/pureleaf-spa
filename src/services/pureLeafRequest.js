@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getItem, setItem } from "../utils/localStorage";
+import { getItem } from "../utils/localStorage";
 import { toast } from "sonner";
 
 const pureLeafUrl =

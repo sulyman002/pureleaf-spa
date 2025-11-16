@@ -30,9 +30,6 @@ const Edit = () => {
   const [grabOld, setGrabOld] = useState(null);
   const fileInputId = React.useId();
 
-  if (!editData) return null; 
-
-  
   useEffect(() => {
     if (formData?.oldFile) {
       axios
@@ -64,13 +61,14 @@ const Edit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!editData) return null;
+
     if (!formData?.name || !description || !formData.type) {
       toast.error("Please fill in all required fields.");
       return;
     }
 
     setSubmitting(true);
-
     const updatedFormData = new FormData();
     updatedFormData.append("name", formData.name);
     updatedFormData.append("description", description);
