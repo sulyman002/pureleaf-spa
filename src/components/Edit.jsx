@@ -165,7 +165,7 @@ const Edit = () => {
                   {expanded.includes("restaurant") ? (
                     <Minus size={24} className="text-gray-900" />
                   ) : (
-                    <Plus size={24} text-gray-900 />
+                   <Plus size={24} className="text-gray-900" />
                   )}
                 </div>
               </div>
@@ -280,16 +280,13 @@ const Edit = () => {
                   {expanded.includes("spa") ? (
                     <Minus size={24} className="text-gray-900" />
                   ) : (
-                    <Plus size={24} text-gray-900 />
+                    <Plus size={24} className="text-gray-900" />
                   )}
                 </div>
               </div>
               {expanded.includes("spa") && (
                 <div className="flex items-center justify-center gap-6">
                   <div className="flex flex-col gap-3 w-full">
-                    <label className="text-base text-[#101828]">
-                      Food Menu
-                    </label>
                     <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
                       <div className="flex gap-4 w-full">
                         <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
@@ -365,7 +362,7 @@ const Edit = () => {
                   {expanded.includes("review") ? (
                     <Minus size={24} className="text-gray-900" />
                   ) : (
-                    <Plus size={24} text-gray-900 />
+                   <Plus size={24} className="text-gray-900" />
                   )}
                 </div>
               </div>

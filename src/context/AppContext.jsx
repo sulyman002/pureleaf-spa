@@ -24,6 +24,14 @@ export const AppProvider = ({ children }) => {
   const [openQrUpdate, setOpenQrUpdate] = useState(false);
   const [filterValue, setFilterValue] = useState("");
   const [inputValue, setInputValue] = useState("");
+  const [expanded, setExpanded] = useState([]);
+    const toggleExpand = (menu) => {
+      setExpanded((prev) =>
+        prev.includes(menu)
+          ? prev.filter((item) => item !== menu)
+          : [...prev, menu]
+      );
+    };
 
   const uploadToServer = async (file) => {
     if (!file) return;
@@ -151,6 +159,9 @@ export const AppProvider = ({ children }) => {
     inputValue,
     setInputValue,
     logoImg,
+    toggleExpand,
+    setExpanded,
+    expanded
 
   };
 
