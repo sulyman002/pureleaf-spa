@@ -98,58 +98,61 @@ const CreateMenu = () => {
           className="flex flex-col gap-8.5 pt-6 pb-8"
         >
           {/* Menu Name */}
-          <div className="flex flex-col gap-3 w-full ">
-            <label htmlFor="menuName" className="text-base text-[#101828] ">
-              Menu Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              onChange={handleChange}
-              value={fieldData?.name}
-              minLength={3}
-              maxLength={15}
-              placeholder="Enter menu name"
-              className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
-            />
-          </div>
-
-          {/* Restaurant  */}
-          <div className="flex flex-col gap-6 pb-5 border-b-3 border-gray-100">
-            <div className="flex items-center gap-6">
-              <p className="text-[#101828] text-base font-medium font-500 flex-1">
-                Restaurant Menus
-              </p>
-
-              <div
-                onClick={() => toggleExpand("restaurant")}
-                className="cursor-pointer"
-              >
-                {expanded.includes("restaurant") ? (
-                  <Minus size={24} className="text-gray-900" />
-                ) : (
-                  <Plus size={24} className="text-gray-900" />
-                )}
-              </div>
+          <div className="flex flex-col gap-8 overflow-y-auto h-100 ">
+            <div className="flex flex-col gap-3 w-full ">
+              <label htmlFor="menuName" className="text-base text-[#101828] ">
+                Menu Name
+              </label>
+              <input
+                type="text"
+                name="name"
+                onChange={handleChange}
+                value={fieldData?.name}
+                minLength={3}
+                maxLength={15}
+                placeholder="Enter menu name"
+                className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
+              />
             </div>
-            {expanded.includes("restaurant") && (
-              <div className="flex items-center justify-center gap-6">
-                <div className="flex flex-col gap-3 w-full">
-                  <label className="text-base text-[#101828]">Food Menu</label>
 
-                  {/* Display this when file exist */}
-                  {foodFile ? (
-                    <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
-                      <div className="flex gap-4 w-full">
-                        <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
-                          <File size={16} className="text-[#5C2E1B]" />
-                        </div>
+            {/* Restaurant  */}
+            <div className="flex flex-col gap-6 pb-5 border-b-3 border-gray-100">
+              <div className="flex items-center gap-6">
+                <p className="text-[#101828] text-base font-medium font-500 flex-1">
+                  Restaurant Menus
+                </p>
 
-                        <div className="flex flex-col w-full gap-1">
-                          <div className="text-gray-700 text-sm font-500">
-                            <p className="">Name</p>
-                            <p className="">120KB</p>
-                            {/* <span>{formData.newFile?.name || grabOld?.name}</span>
+                <div
+                  onClick={() => toggleExpand("restaurant")}
+                  className="cursor-pointer"
+                >
+                  {expanded.includes("restaurant") ? (
+                    <Minus size={24} className="text-gray-900" />
+                  ) : (
+                    <Plus size={24} className="text-gray-900" />
+                  )}
+                </div>
+              </div>
+              {expanded.includes("restaurant") && (
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex flex-col gap-3 w-full">
+                    <label className="text-base text-[#101828]">
+                      Food Menu
+                    </label>
+
+                    {/* Display this when file exist */}
+                    {foodFile ? (
+                      <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
+                        <div className="flex gap-4 w-full">
+                          <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
+                            <File size={16} className="text-[#5C2E1B]" />
+                          </div>
+
+                          <div className="flex flex-col w-full gap-1">
+                            <div className="text-gray-700 text-sm font-500">
+                              <p className="">Name</p>
+                              <p className="">120KB</p>
+                              {/* <span>{formData.newFile?.name || grabOld?.name}</span>
                           <br />
                           <span className="text-gray-500 font-400">
                             {formData.newFile
@@ -159,62 +162,65 @@ const CreateMenu = () => {
                               : 0}{" "}
                             KB
                           </span> */}
-                          </div>
+                            </div>
 
-                          {/* Progress */}
-                          <div className="flex items-center gap-3 py-1">
-                            <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
-                              {/* <div
+                            {/* Progress */}
+                            <div className="flex items-center gap-3 py-1">
+                              <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
+                                {/* <div
                                 className="h-2 rounded-full bg-[#5C2E1B] transition-all"
                                 style={{ width: `${uploadProgress}%` }}
                               /> */}
+                              </div>
+                              <p className="text-sm font-500 text-gray-700">
+                                {/* {uploadProgress}% */}
+                                100%
+                              </p>
                             </div>
-                            <p className="text-sm font-500 text-gray-700">
-                              {/* {uploadProgress}% */}
-                              100%
-                            </p>
+                          </div>
+
+                          <div>
+                            {uploadStatus === "completed" ? (
+                              <CircleCheck
+                                size={16}
+                                className="text-[#5C2E1B]"
+                              />
+                            ) : (
+                              <Trash2
+                                size={20}
+                                className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                              />
+                            )}
                           </div>
                         </div>
-
-                        <div>
-                          {uploadStatus === "completed" ? (
-                            <CircleCheck size={16} className="text-[#5C2E1B]" />
-                          ) : (
-                            <Trash2
-                              size={20}
-                              className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                        <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
+                          <CloudUpload size={20} className="text-gray-600" />
+                        </div>
+                        <div className="flex flex-col gap-1 text-xs text-center text-gray-500">
+                          <div>
+                            <input
+                              type="file"
+                              id="logo"
+                              className="hidden"
+                              accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                          )}
+                            <label htmlFor="logo" className="text-sm">
+                              <b className="text-[#5C2E1B] font-500 cursor-pointer">
+                                Click
+                              </b>
+                            </label>
+                            <span> or drag and drop</span>
+                          </div>
+
+                          <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
-                      <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
-                        <CloudUpload size={20} className="text-gray-600" />
-                      </div>
-                      <div className="flex flex-col gap-1 text-xs text-center text-gray-500">
-                        <div>
-                          <input
-                            type="file"
-                            id="logo"
-                            className="hidden"
-                            accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
-                          />
-                          <label htmlFor="logo" className="text-sm">
-                            <b className="text-[#5C2E1B] font-500 cursor-pointer">
-                              Click
-                            </b>
-                          </label>
-                          <span> or drag and drop</span>
-                        </div>
+                    )}
 
-                        <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* <div>
+                    {/* <div>
                       {uploadStatus === "completed" ? (
                         <CircleCheck size={16} className="text-[#5C2E1B]" />
                       ) : (
@@ -232,24 +238,26 @@ const CreateMenu = () => {
                         />
                       )}
                     </div> */}
-                </div>
-                {/* Second Component here */}
-                <div className="flex flex-col gap-3 w-full">
-                  <label className="text-base text-[#101828]">Drink Menu</label>
+                  </div>
+                  {/* Second Component here */}
+                  <div className="flex flex-col gap-3 w-full">
+                    <label className="text-base text-[#101828]">
+                      Drink Menu
+                    </label>
 
-                  {/* Display this when file exist */}
-                  {drinkFile ? (
-                    <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
-                      <div className="flex gap-4 w-full">
-                        <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
-                          <File size={16} className="text-[#5C2E1B]" />
-                        </div>
+                    {/* Display this when file exist */}
+                    {drinkFile ? (
+                      <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
+                        <div className="flex gap-4 w-full">
+                          <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
+                            <File size={16} className="text-[#5C2E1B]" />
+                          </div>
 
-                        <div className="flex flex-col w-full gap-1">
-                          <div className="text-gray-700 text-sm font-500">
-                            <p className="">Name</p>
-                            <p className="">120KB</p>
-                            {/* <span>{formData.newFile?.name || grabOld?.name}</span>
+                          <div className="flex flex-col w-full gap-1">
+                            <div className="text-gray-700 text-sm font-500">
+                              <p className="">Name</p>
+                              <p className="">120KB</p>
+                              {/* <span>{formData.newFile?.name || grabOld?.name}</span>
                           <br />
                           <span className="text-gray-500 font-400">
                             {formData.newFile
@@ -259,99 +267,102 @@ const CreateMenu = () => {
                               : 0}{" "}
                             KB
                           </span> */}
-                          </div>
+                            </div>
 
-                          {/* Progress */}
-                          <div className="flex items-center gap-3 py-1">
-                            <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
-                              {/* <div
+                            {/* Progress */}
+                            <div className="flex items-center gap-3 py-1">
+                              <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
+                                {/* <div
                                 className="h-2 rounded-full bg-[#5C2E1B] transition-all"
                                 style={{ width: `${uploadProgress}%` }}
                               /> */}
+                              </div>
+                              <p className="text-sm font-500 text-gray-700">
+                                {/* {uploadProgress}% */}
+                                100%
+                              </p>
                             </div>
-                            <p className="text-sm font-500 text-gray-700">
-                              {/* {uploadProgress}% */}
-                              100%
-                            </p>
+                          </div>
+
+                          <div>
+                            {uploadStatus === "completed" ? (
+                              <CircleCheck
+                                size={16}
+                                className="text-[#5C2E1B]"
+                              />
+                            ) : (
+                              <Trash2
+                                size={20}
+                                className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                              />
+                            )}
                           </div>
                         </div>
-
-                        <div>
-                          {uploadStatus === "completed" ? (
-                            <CircleCheck size={16} className="text-[#5C2E1B]" />
-                          ) : (
-                            <Trash2
-                              size={20}
-                              className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                        <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
+                          <CloudUpload size={20} className="text-gray-600" />
+                        </div>
+                        <div className="flex flex-col gap-1 text-xs text-center text-gray-500">
+                          <div>
+                            <input
+                              type="file"
+                              id="logo"
+                              className="hidden"
+                              accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
-                      <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
-                        <CloudUpload size={20} className="text-gray-600" />
-                      </div>
-                      <div className="flex flex-col gap-1 text-xs text-center text-gray-500">
-                        <div>
-                          <input
-                            type="file"
-                            id="logo"
-                            className="hidden"
-                            accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
-                          />
-                          <label htmlFor="logo" className="text-sm">
-                            <b className="text-[#5C2E1B] font-500 cursor-pointer">
-                              Click
-                            </b>
-                          </label>
-                          <span> or drag and drop</span>
-                        </div>
+                            <label htmlFor="logo" className="text-sm">
+                              <b className="text-[#5C2E1B] font-500 cursor-pointer">
+                                Click
+                              </b>
+                            </label>
+                            <span> or drag and drop</span>
+                          </div>
 
-                        <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
+                          <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Spa Menu  */}
-          <div className="flex flex-col gap-6 pb-5 border-b-3 border-gray-100">
-            <div className="flex items-center gap-6">
-              <p className="text-[#101828] text-base font-medium font-500 flex-1">
-                Spa Menu
-              </p>
-
-              <div
-                onClick={() => toggleExpand("spa")}
-                className="cursor-pointer"
-              >
-                {expanded.includes("spa") ? (
-                  <Minus size={24} className="text-gray-900" />
-                ) : (
-                  <Plus size={24} className="text-gray-900" />
-                )}
-              </div>
+              )}
             </div>
-            {expanded.includes("spa") && (
-              <div className="flex items-center justify-center gap-6">
-                <div className="flex flex-col gap-3 w-full">
-                  {/* Display this when file exist */}
-                  {spaMenu ? (
-                    <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
-                      <div className="flex gap-4 w-full">
-                        <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
-                          <File size={16} className="text-[#5C2E1B]" />
-                        </div>
 
-                        <div className="flex flex-col w-full gap-1">
-                          <div className="text-gray-700 text-sm font-500">
-                            <p className="">Name</p>
-                            <p className="">120KB</p>
-                            {/* <span>{formData.newFile?.name || grabOld?.name}</span>
+            {/* Spa Menu  */}
+            <div className="flex flex-col gap-6 pb-5 border-b-3 border-gray-100">
+              <div className="flex items-center gap-6">
+                <p className="text-[#101828] text-base font-medium font-500 flex-1">
+                  Spa Menu
+                </p>
+
+                <div
+                  onClick={() => toggleExpand("spa")}
+                  className="cursor-pointer"
+                >
+                  {expanded.includes("spa") ? (
+                    <Minus size={24} className="text-gray-900" />
+                  ) : (
+                    <Plus size={24} className="text-gray-900" />
+                  )}
+                </div>
+              </div>
+              {expanded.includes("spa") && (
+                <div className="flex items-center justify-center gap-6">
+                  <div className="flex flex-col gap-3 w-full">
+                    {/* Display this when file exist */}
+                    {spaMenu ? (
+                      <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
+                        <div className="flex gap-4 w-full">
+                          <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
+                            <File size={16} className="text-[#5C2E1B]" />
+                          </div>
+
+                          <div className="flex flex-col w-full gap-1">
+                            <div className="text-gray-700 text-sm font-500">
+                              <p className="">Name</p>
+                              <p className="">120KB</p>
+                              {/* <span>{formData.newFile?.name || grabOld?.name}</span>
                           <br />
                           <span className="text-gray-500 font-400">
                             {formData.newFile
@@ -361,62 +372,65 @@ const CreateMenu = () => {
                               : 0}{" "}
                             KB
                           </span> */}
-                          </div>
+                            </div>
 
-                          {/* Progress */}
-                          <div className="flex items-center gap-3 py-1">
-                            <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
-                              {/* <div
+                            {/* Progress */}
+                            <div className="flex items-center gap-3 py-1">
+                              <div className="w-full h-2 bg-[#F9F5FF] rounded-full">
+                                {/* <div
                                 className="h-2 rounded-full bg-[#5C2E1B] transition-all"
                                 style={{ width: `${uploadProgress}%` }}
                               /> */}
+                              </div>
+                              <p className="text-sm font-500 text-gray-700">
+                                {/* {uploadProgress}% */}
+                                100%
+                              </p>
                             </div>
-                            <p className="text-sm font-500 text-gray-700">
-                              {/* {uploadProgress}% */}
-                              100%
-                            </p>
+                          </div>
+
+                          <div>
+                            {uploadStatus === "completed" ? (
+                              <CircleCheck
+                                size={16}
+                                className="text-[#5C2E1B]"
+                              />
+                            ) : (
+                              <Trash2
+                                size={20}
+                                className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                              />
+                            )}
                           </div>
                         </div>
-
-                        <div>
-                          {uploadStatus === "completed" ? (
-                            <CircleCheck size={16} className="text-[#5C2E1B]" />
-                          ) : (
-                            <Trash2
-                              size={20}
-                              className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                        <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
+                          <CloudUpload size={20} className="text-gray-600" />
+                        </div>
+                        <div className="flex flex-col gap-1 text-xs text-center text-gray-500 w-full flex-1">
+                          <div>
+                            <input
+                              type="file"
+                              id="logo"
+                              className="hidden"
+                              accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                          )}
+                            <label htmlFor="logo" className="text-sm">
+                              <b className="text-[#5C2E1B] font-500 cursor-pointer">
+                                Click
+                              </b>
+                            </label>
+                            <span> or drag and drop</span>
+                          </div>
+
+                          <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
                         </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
-                      <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
-                        <CloudUpload size={20} className="text-gray-600" />
-                      </div>
-                      <div className="flex flex-col gap-1 text-xs text-center text-gray-500 w-full flex-1">
-                        <div>
-                          <input
-                            type="file"
-                            id="logo"
-                            className="hidden"
-                            accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
-                          />
-                          <label htmlFor="logo" className="text-sm">
-                            <b className="text-[#5C2E1B] font-500 cursor-pointer">
-                              Click
-                            </b>
-                          </label>
-                          <span> or drag and drop</span>
-                        </div>
+                    )}
 
-                        <p>PDF, SVG, PNG or JPG (max. 800x400px)</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* <div>
+                    {/* <div>
                       {uploadStatus === "completed" ? (
                         <CircleCheck size={16} className="text-[#5C2E1B]" />
                       ) : (
@@ -434,13 +448,12 @@ const CreateMenu = () => {
                         />
                       )}
                     </div> */}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
-          
-          {/* Review Link */}
+            {/* Review Link */}
             <div className="flex flex-col gap-6 pb-5 border-b-3 border-gray-100">
               <div className="flex items-center gap-6">
                 <p className="text-[#101828] text-base font-medium font-500 flex-1">
@@ -454,7 +467,7 @@ const CreateMenu = () => {
                   {expanded.includes("review") ? (
                     <Minus size={24} className="text-gray-900" />
                   ) : (
-                   <Plus size={24} className="text-gray-900" />
+                    <Plus size={24} className="text-gray-900" />
                   )}
                 </div>
               </div>
@@ -475,6 +488,7 @@ const CreateMenu = () => {
                 </div>
               )}
             </div>
+          </div>
 
           {/* Buttons */}
           <div className="flex items-center w-full gap-3">
