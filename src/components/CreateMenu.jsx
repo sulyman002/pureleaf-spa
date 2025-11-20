@@ -10,106 +10,142 @@ import {
   File,
   ChevronRight,
 } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import useAppContext from "../context/useAppContext";
 import { useCreateData } from "../services/pureLeafRequest";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const CreateMenu = () => {
-  const [submitting, setSubmitting] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
   const { mutate: createData } = useCreateData();
-  const fileInputId = React.useId();
-
-  const [fieldData, setFieldData] = useState({
-    name: "",
-  });
-
-  // Make category selection mandatory
-  const [description, setDescription] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm();
 
   const {
     setCreateNew,
-    uploadProgress,
-    uploadFile,
-    handleFileUpload,
-    setUploadFile,
-    setUploadProgress,
     toggleExpand,
     expanded,
+    handleSpaFile,
+    handleDrinkFile,
+    handleFoodFile,
+    uploadDrinkToServer,
+    uploadFoodToServer,
+    uploadSpaToServer,
   } = useAppContext();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFieldData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const onDragOver = (e) => {
+    e.preventDefault();
+  };
+  const onDragLeave = (e) => {
+    e.preventDefault();
   };
 
-  const handleSubmit = (e) => {
+  const handleDropSpa = (e) => {
     e.preventDefault();
-    setSubmitting(false);
+    e.stopPropagation();
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    setValue("spaMenuFile", file);
+    uploadSpaToServer(file);
+  };
 
-    if (!fieldData?.name.trim() || !uploadFile || !description) {
-      toast.error("Please fill in all required fields.");
-      return;
+  const handleDropFood = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    setValue("foodMenuFile", file);
+    uploadFoodToServer(file);
+  };
+
+  const handleDropDrink = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const file = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!file) return;
+    setValue("drinkMenuFile", file);
+    uploadDrinkToServer(file);
+  };
+
+  const foodMenuFile = watch("foodMenuFile");
+  const drinkMenuFile = watch("drinkMenuFile");
+  const spaMenuFile = watch("spaMenuFile");
+
+  const onSubmit = (data) => {
+    const fd = new FormData();
+    fd.append("name", data.name || "");
+    fd.append("category", data.category || "");
+    fd.append("type", data.type || "");
+    fd.append("description", data.description || "");
+
+    if (data.foodMenuFile?.[0]) {
+      fd.append("foodMenuFile", data.foodMenuFile[0]);
+    }
+    if (data.drinkMenuFile?.[0]) {
+      fd.append("drinkMenuFile", data.drinkMenuFile[0]);
+    }
+    if (data.spaMenuFile?.[0]) {
+      fd.append("spaMenuFile", data.spaMenuFile[0]);
     }
 
-    const formData = new FormData();
-    formData.append("name", fieldData.name);
-    formData.append("category", description);
-    formData.append("file", uploadFile);
-    setSubmitting(true);
-
-    createData(formData, {
+    createData(fd, {
       onSuccess: () => {
-        toast.success("Menu created successfully!");
+        toast.success("Menu created");
         setCreateNew(false);
-        setFieldData({ name: "" });
-        setDescription("");
-        setUploadProgress(0);
-        setUploadFile(null);
       },
-      onError: (err) => {
-        toast.error(err?.response?.data?.message || "Something went wrong.");
+      onError: (error) => {
+        toast.error("Failed to create menu");
+        console.error(error);
       },
     });
   };
 
-  const foodFile = true;
-  const drinkFile = true;
-  const spaMenu = false;
-  const uploadStatus = "completed";
-
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
-      <div className="bg-white mx-8 w-[644px] rounded-xl flex flex-col gap-2 px-6 py-8">
-        <div className="flex items-center justify-between py-6 border-b border-gray-200">
-          <p className="font-600 font-semibold text-2xl text-gray-900 ">
-            Create New Menu
-          </p>
-          <div onClick={() => setCreateNew(false)} className="cursor-pointer ">
-            <X />
+      <div className="bg-white mx-8 w-[644px] rounded-xl flex flex-col gap-2 px-6 py-6">
+        <div className="border-b border-gray-200 px-5">
+          <div className=" mb-4 ">
+            <div className="flex items-center justify-between py-6">
+              <p className="font-semibold text-2xl text-gray-900">
+                Create New Menu
+              </p>
+              <div
+                onClick={() => setCreateNew(false)}
+                className="cursor-pointer"
+              >
+                <X size={24} className="text-[#202020]" />
+              </div>
+            </div>
+            <p className="text-base font-400 text-gray-600">
+              Upload single or multiple_menus. We'll generate a single QR code
+              that directs customers accordingly.
+            </p>
           </div>
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-8.5 pt-6 pb-8"
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-8 pt-6 pb-8 px-5 "
         >
           {/* Menu Name */}
-          <div className="flex flex-col gap-8 overflow-y-auto h-100 ">
+          <div className="flex flex-col gap-8 overflow-y-auto h-100  scrollbar-thin scrollbar-right scrollbar-thumb-red-400 scrollbar-track-gray-50 scrollbar-thumb-inset text-gray-100">
             <div className="flex flex-col gap-3 w-full ">
               <label htmlFor="menuName" className="text-base text-[#101828] ">
                 Menu Name
               </label>
               <input
                 type="text"
-                name="name"
-                onChange={handleChange}
-                value={fieldData?.name}
-                minLength={3}
-                maxLength={15}
+                {...register("menuName", {
+                  required: true,
+                  minLength: 3,
+                  maxLength: 15,
+                })}
                 placeholder="Enter menu name"
                 className="py-3 px-3.5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500 "
               />
@@ -141,7 +177,7 @@ const CreateMenu = () => {
                     </label>
 
                     {/* Display this when file exist */}
-                    {foodFile ? (
+                    {foodMenuFile ? (
                       <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
                         <div className="flex gap-4 w-full">
                           <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
@@ -195,7 +231,12 @@ const CreateMenu = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                      <div
+                        onDragOver={onDragOver}
+                        onDragLeave={onDragLeave}
+                        onDrop={handleDropFood}
+                        className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg"
+                      >
                         <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
                           <CloudUpload size={20} className="text-gray-600" />
                         </div>
@@ -203,11 +244,15 @@ const CreateMenu = () => {
                           <div>
                             <input
                               type="file"
-                              id="logo"
+                              id="foodMenuFile"
                               className="hidden"
+                              {...register("foodMenuFile")}
+                              onChange={(e) => {
+                                handleFoodFile(e);
+                              }}
                               accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                            <label htmlFor="logo" className="text-sm">
+                            <label htmlFor="foodMenuFile" className="text-sm">
                               <b className="text-[#5C2E1B] font-500 cursor-pointer">
                                 Click
                               </b>
@@ -246,7 +291,7 @@ const CreateMenu = () => {
                     </label>
 
                     {/* Display this when file exist */}
-                    {drinkFile ? (
+                    {drinkMenuFile ? (
                       <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
                         <div className="flex gap-4 w-full">
                           <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
@@ -300,7 +345,12 @@ const CreateMenu = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                      <div
+                        onDragOver={onDragOver}
+                        onDragLeave={onDragLeave}
+                        onDrop={handleDropDrink}
+                        className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg"
+                      >
                         <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
                           <CloudUpload size={20} className="text-gray-600" />
                         </div>
@@ -308,11 +358,15 @@ const CreateMenu = () => {
                           <div>
                             <input
                               type="file"
-                              id="logo"
+                              id="drinkMenuFile"
                               className="hidden"
+                              {...register("drinkMenuFile")}
+                              onChange={(e) => {
+                                handleDrinkFile(e);
+                              }}
                               accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                            <label htmlFor="logo" className="text-sm">
+                            <label htmlFor="drinkMenuFile" className="text-sm">
                               <b className="text-[#5C2E1B] font-500 cursor-pointer">
                                 Click
                               </b>
@@ -351,7 +405,7 @@ const CreateMenu = () => {
                 <div className="flex items-center justify-center gap-6">
                   <div className="flex flex-col gap-3 w-full">
                     {/* Display this when file exist */}
-                    {spaMenu ? (
+                    {spaMenuFile ? (
                       <div className="rounded-lg border border-[#AD968C] p-4 flex  justify-between w-full">
                         <div className="flex gap-4 w-full">
                           <div className="w-8 h-8 rounded-full border-4 border-[#FFF7F5] bg-[#FFF2EB] flex items-center justify-center">
@@ -405,7 +459,12 @@ const CreateMenu = () => {
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg">
+                      <div
+                        onDragOver={onDragOver}
+                        onDragLeave={onDragLeave}
+                        onDrop={handleDropSpa}
+                        className="flex items-center justify-center  py-6 px-6 gap-3 shadow border border-gray-200  w-full rounded-lg"
+                      >
                         <div className="h-10 w-10 rounded-full border-[6px] border-gray-50 bg-[#F2F4F7] flex items-center justify-center">
                           <CloudUpload size={20} className="text-gray-600" />
                         </div>
@@ -413,11 +472,15 @@ const CreateMenu = () => {
                           <div>
                             <input
                               type="file"
-                              id="logo"
+                              id="spaMenuFile"
+                              {...register("spaMenuFile")}
+                              onChange={(e) => {
+                                handleSpaFile(e);
+                              }}
                               className="hidden"
                               accept="image/svg+xml, image/png, image/jpg, image/jpeg, image/gif"
                             />
-                            <label htmlFor="logo" className="text-sm">
+                            <label htmlFor="spaMenuFile" className="text-sm">
                               <b className="text-[#5C2E1B] font-500 cursor-pointer">
                                 Click
                               </b>
@@ -496,7 +559,6 @@ const CreateMenu = () => {
               type="button"
               onClick={() => {
                 setCreateNew(false);
-                setUploadFile(null);
               }}
               className="w-full text-base font-semibold text-[#404652] flex items-center justify-center rounded-lg py-3 px-7 border border-[#E2E8F0] bg-gray-50 "
             >
@@ -505,14 +567,14 @@ const CreateMenu = () => {
 
             <button
               type="submit"
-              disabled={submitting}
+              disabled={isSubmitting}
               className={`w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 bg-[#5C2E1B] ${
-                submitting
+                isSubmitting
                   ? "cursor-not-allowed bg-[#5C2E1B]/50"
                   : "bg-[#5C2E1B]"
               }`}
             >
-              {submitting ? "Saving..." : "Save"}
+              {isSubmitting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

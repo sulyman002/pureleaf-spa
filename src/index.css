@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+/* thin scrollbar */
+@utility scrollbar-thin {
+  &::-webkit-scrollbar {
+    width: 18px;
+  }
+}
+
+/* thumb color */
+@utility scrollbar-thumb-red-400 {
+  &::-webkit-scrollbar-thumb {
+    background: #5C2E1B;
+  }
+}
+
+/* track color */
+@utility scrollbar-track-gray-50 {
+  &::-webkit-scrollbar-track {
+    background: #f3f4f6;
+  }
+}
+
+/* inset thumb (inner padding) */
+@utility scrollbar-thumb-inset {
+  &::-webkit-scrollbar-thumb {
+    border: 8px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+/* force scrollbar to right side */
+@utility scrollbar-right {
+  direction: ltr;
+}
+
+
 :root {
   font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
