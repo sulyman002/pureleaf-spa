@@ -53,7 +53,7 @@ const Edit = () => {
 
   console.log(editData);
 
-  const { register, handleSubmit, watch, setValue } = useForm({
+  const { register, handleSubmit, watch, setValue, reset } = useForm({
     defaultValues: {
       menuName: editData?.name || "",
       review: editData?.reviewUrl || "",
@@ -73,9 +73,11 @@ const Edit = () => {
   const drinkMenuFile = watch("drinkMenuFile");
   const spaMenuFile = watch("spaMenuFile");
 
-  const foodFile = foodMenuFile || null;
-  const drinkFile = drinkMenuFile || null;
-  const spaFile = spaMenuFile || null;
+  const foodFile = foodMenuFile === "" ? "" : foodMenuFile;
+  const drinkFile = drinkMenuFile === "" ? "" : drinkMenuFile;
+
+  
+  const spaFile = spaMenuFile === "" ? "" : spaMenuFile;
 
   useEffect(() => {
     if (typeof foodFile === "string") {
@@ -102,37 +104,46 @@ const Edit = () => {
     spaFile,
   ]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+  if (editData) {
+    reset({
+      menuName: editData.name || "",
+      review: editData.reviewUrl || "",
+      foodMenuFile: editData.foodMenuFileUrl || "",
+      drinkMenuFile: editData.drinkMenuFileUrl || "",
+      spaMenuFile: editData.spaMenuFileUrl || "",
+    });
+  }
+}, [editData, reset]);
 
-    // if (!editData) return null;
+  const onSubmit = async (data) => {
+    setIsSubmitting(true);
 
-    // if (!formData?.name || !description || !formData.type) {
-    //   toast.error("Please fill in all required fields.");
-    //   return;
-    // }
+    try {
+      const fd = new FormData();
+      fd.append("name", data.menuName || "");
+      fd.append("reviewUrl", data.review || "");
 
-    // setSubmitting(true);
-    // const updatedFormData = new FormData();
-    // updatedFormData.append("name", formData.name);
-    // updatedFormData.append("description", description);
-    // updatedFormData.append("type", formData.type);
-    // if (formData.newFile) updatedFormData.append("file", formData.newFile);
+      if (data.foodMenuFile) fd.append("foodMenuFile", data.foodMenuFile);
+      if (data.drinkMenuFile) fd.append("drinkMenuFile", data.drinkMenuFile);
+      if (data.spaMenuFile) fd.append("spaMenuFile", data.spaMenuFile);
 
-    // updateData(
-    //   { id: editData.id, payload: updatedFormData },
-    //   {
-    //     onSuccess: () => {
-    //       toast.success("Menu updated successfully!");
-
-    //     },
-    //     onError: (err) => {
-    //       console.error(err);
-    //       toast.error("Failed to update menu. Try again.");
-    //     },
-    //     onSettled: () => setSubmitting(false),
-    //   }
-    // );
+      updateData(
+        { id: editData.id, payload: fd },
+        {
+          onSuccess: () => {
+            toast.success("Menu updated");
+            handleOpenEdit();
+          },
+          onError: (error) => {
+            toast.error(error.message);
+            console.error(error);
+          },
+        }
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const uploadsInProgress =
@@ -148,7 +159,9 @@ const Edit = () => {
         <div className="border-b border-gray-200 px-5">
           <div className=" mb-4 ">
             <div className="flex items-center justify-between py-6">
-              <p className="font-semibold text-2xl text-gray-900">Edit name</p>
+              <p className="font-semibold text-2xl text-gray-900">
+                Edit '{editData?.name}'
+              </p>
               <div onClick={handleOpenEdit} className="cursor-pointer">
                 <X size={24} className="text-[#202020]" />
               </div>

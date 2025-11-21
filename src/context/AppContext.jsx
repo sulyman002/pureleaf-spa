@@ -97,7 +97,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleOpenEdit = () => {
-    setEdit((prev) => !prev);
+    setEdit(!edit);
   };
 
   //  FILE INPUT HANDLERS (if used elsewhere) 

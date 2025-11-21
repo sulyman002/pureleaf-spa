@@ -61,14 +61,16 @@ const MenuUpload = ({
     // Optional: if you support aborting uploads, call abort here.
   };
 
-  const displayFile =
+ const displayFile =
   typeof file === "string"
     ? {
-        name: file.split("/").pop(),  // extract filename from URL
+        name: "File",
         size: null,
         url: file,
       }
     : file || null;
+
+
   const fileSizeKb =
     displayFile && typeof displayFile.size === "number"
       ? Math.round(displayFile.size / 1024)

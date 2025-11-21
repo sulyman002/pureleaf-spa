@@ -245,12 +245,7 @@ const CreateMenu = () => {
                 <div className="w-full flex flex-col gap-3">
                   <input
                     type="text"
-                    {...register("review", {
-                      pattern: {
-                        value: /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[^\s]*)?$/i,
-                        message: "Please enter a valid URL",
-                      },
-                    })}
+                    {...register("review")}
                     placeholder="Add a link to receive feedback from your customers"
                     className="py-3 px-3.5 mb-5 outline-none text-gray-900 border-[0.6px] border-[#C8C8C8] rounded-lg placeholder-gray-500"
                   />
