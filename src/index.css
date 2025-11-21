@@ -1,37 +1,43 @@
 @import "tailwindcss";
 
-/* thin scrollbar */
-@utility scrollbar-thin {
-  &::-webkit-scrollbar {
-    width: 18px;
+@layer utilities {
+  /* thin scrollbar */
+  .scrollbar-thin {
+    &::-webkit-scrollbar {
+      width: 18px;
+    }
   }
-}
 
-/* thumb color */
-@utility scrollbar-thumb-red-400 {
-  &::-webkit-scrollbar-thumb {
-    background: #5C2E1B;
+  /* thumb color */
+  .scrollbar-thumb-red-400 {
+    &::-webkit-scrollbar-thumb {
+      background: #5C2E1B;
+    }
   }
-}
 
-/* track color */
-@utility scrollbar-track-gray-50 {
-  &::-webkit-scrollbar-track {
-    background: #f3f4f6;
+  /* track color */
+  .scrollbar-track-gray-50 {
+    &::-webkit-scrollbar-track {
+      background: #f3f4f6;
+    }
   }
-}
 
-/* inset thumb (inner padding) */
-@utility scrollbar-thumb-inset {
-  &::-webkit-scrollbar-thumb {
-    border: 8px solid transparent;
-    background-clip: content-box;
+  /* inset thumb (inner padding) */
+  .scrollbar-thumb-inset {
+    &::-webkit-scrollbar-thumb {
+      border: 8px solid transparent;
+      background-clip: content-box;
+    }
   }
-}
 
-/* force scrollbar to right side */
-@utility scrollbar-right {
-  direction: ltr;
+  /* force scrollbar to right side */
+  .scrollbar-right {
+    direction: ltr;
+  }
+
+  .text-shadow {
+    text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  }
 }
 
 

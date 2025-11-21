@@ -55,6 +55,10 @@ const CreateMenu = () => {
   const drinkMenuFile = watch("drinkMenuFile");
   const spaMenuFile = watch("spaMenuFile");
 
+  const values = watch(["name", "reviewUrl", "foodMenuFile", "drinkMenuFile"]);
+
+  const isDisabled = values.every((v) => !v);
+
   const foodFile = foodMenuFile || null;
   const drinkFile = drinkMenuFile || null;
   const spaFile = spaMenuFile || null;
@@ -91,7 +95,7 @@ const CreateMenu = () => {
     drinkStatus === "uploading" ||
     spaStatus === "uploading";
 
-  const isSaveDisabled = isSubmitting || uploadsInProgress;
+  const isSaveDisabled = isSubmitting || uploadsInProgress || isDisabled;
 
   return (
     <div className="fixed flex items-center justify-center z-50 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -277,7 +281,7 @@ const CreateMenu = () => {
                   : "bg-[#5C2E1B]"
               }`}
             >
-              {isSubmitting ? "Saving..." : "Save"}
+              {isSubmitting ? "Create Menu..." : "Create Menu"}
             </button>
           </div>
         </form>

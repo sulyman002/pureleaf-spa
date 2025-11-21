@@ -21,6 +21,7 @@ export const AppProvider = ({ children }) => {
   const [data, setData] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [edit, setEdit] = useState(false);
+  const [preview, setPreview] = useState(false);
   const [openQr, setOpenQr] = useState(false);
   const [qr, setQr] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -99,6 +100,9 @@ export const AppProvider = ({ children }) => {
   const handleOpenEdit = () => {
     setEdit(!edit);
   };
+  const handleOpenPreview = () => {
+    setPreview(!preview)
+  }
 
   //  FILE INPUT HANDLERS (if used elsewhere) 
 
@@ -216,6 +220,9 @@ export const AppProvider = ({ children }) => {
 
     handleOpenEdit,
     edit,
+
+    handleOpenPreview,
+    preview,
 
     handleOpenQr,
     openQr,

@@ -17,6 +17,7 @@ import Edit from "../components/Edit.jsx";
 import CreateMenu from "./CreateMenu.jsx";
 import axios from "axios";
 import Qr from "../components/Qr.jsx";
+import MenuPreview from "./MenuPreview.jsx";
 
 const FilledMenu = () => {
   const [filterBy, setFilterBy] = useState(filter[0]);
@@ -27,6 +28,7 @@ const FilledMenu = () => {
     openDeleteModal,
     handleToggleDeleteModal,
     handleOpenEdit,
+    handleOpenPreview,
     handleFileUpload,
     edit,
     setCreateNew,
@@ -35,6 +37,7 @@ const FilledMenu = () => {
     openQr,
     convertToQrCode,
     filterValue,
+    preview
   } = useAppContext();
 
   const { data: cardData } = useFilledData();
@@ -241,7 +244,15 @@ const FilledMenu = () => {
               </div>
               {/* buttons */}
               <div className="w-full flex items-center gap-2">
-                <div className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] ">
+                <div
+                  onClick={() => {
+                    handleOpenPreview();
+                    setData(data);
+
+                    
+                  }}
+                  className="cursor-pointer py-2 px-3.5 gap-1 rounded-lg border border-[#E2E8F0] flex items-center justify-center text-[#404652] "
+                >
                   <Eye size={16} />
                   <span className="text-sm font-400 ">View</span>
                 </div>
@@ -278,6 +289,8 @@ const FilledMenu = () => {
       {edit && <Edit />}
       {/* its modal here */}
       {openQr && <Qr />}
+      {/* Modal for preview */}
+      {preview && <MenuPreview />}
     </div>
   );
 };
