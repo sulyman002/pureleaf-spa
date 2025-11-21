@@ -33,7 +33,7 @@ const MenuPreview = () => {
   return (
     <div className="fixed flex items-center justify-center z-50 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
       <div className="bg-white mx-8 w-[644px] rounded-xl flex flex-col gap-2 ">
-        <div className="flex items-center justify-between px-6 py-6 border-b">
+        <div className="flex items-center justify-between px-6 py-6 border-b-3 border-gray-100 ">
           <h2 className="text-[24px] font-medium text-gray-900 ">
             Preview: {previewData?.name}
           </h2>

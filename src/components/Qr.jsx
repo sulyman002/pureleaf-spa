@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 // import bar_code from "../assets/bar_code.png";
 import useAppContext from "../context/useAppContext";
 import { X } from "lucide-react";
@@ -7,6 +7,7 @@ import QrUpdate from "../components/QrUpdate.jsx";
 import { useEffect } from "react";
 
 const Qr = () => {
+  const containerRef = useRef(null)
   const {
     handleOpenQr,
     data: qrData,
@@ -23,16 +24,38 @@ const Qr = () => {
   const cleanLink = link?.replace(/^https?:\/\//, "");
 
   useEffect(() => {
-    if (qr) {
-      const container = document.getElementById("qr-container");
+    if(!qr || !containerRef.current) return;
 
-      if (container) {
-        container.innerHTML = "";
-        qr.append(container);
-      }
-    }
-  }, [qr]);
-  console.log(qr);
+    const container = containerRef.current;
+
+    container.innerHtml = "";
+    qr.append(container);
+
+    const observer = new ResizeObserver((entries)=> {
+      const width = entries[0].contentRect.width;
+
+      qr.update({
+        width,
+        height: width,
+      });
+    });
+    
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [qr])
+
+  // useEffect(() => {
+  //   if (qr) {
+  //     const container = document.getElementById("qr-container");
+
+  //     if (container) {
+  //       container.innerHTML = "";
+  //       qr.append(container);
+  //     }
+  //   }
+  // }, [qr]);
+  // console.log(qr);
 
   return (
     <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
@@ -40,7 +63,7 @@ const Qr = () => {
         <div className="border-b border-gray-200">
           <div className="flex items-center justify-between py-6 border-b border-gray-200">
             <p className="font-600 font-semibold text-2xl text-gray-900 ">
-              QR Code for Breakfast Menu
+              QR Code for {qrData?.name}
             </p>
             <div onClick={handleOpenQr} className="cursor-pointer ">
               <X />
@@ -56,15 +79,11 @@ const Qr = () => {
             )}
 
             {qr && !loading && (
-              <div className="flex items-center justify-center w-full">
+              <div className="flex items-center justify-center w-full ">
                 <div
-                  id="qr-container"
-                  className="flex items-center justify-center p-2"
-                  style={{
-                    width: "100%",
-                    maxWidth: "320px",
-                    minHeight: "200px",
-                  }}
+                  ref={containerRef}
+                  className="flex items-center justify-center  w-full h-full"
+                  
                 ></div>
               </div>
             )}

@@ -143,7 +143,7 @@ export const AppProvider = ({ children }) => {
 
   // - QR-CODE LOGIC 
 
-  const convertToQrCode = async (qrData) => {
+  const convertToQrCode = async (qrData, size = 20) => {
     setLoading(true);
     setQr(null);
 
@@ -159,8 +159,8 @@ export const AppProvider = ({ children }) => {
 
     try {
       const qrCode = new QRCodeStyling({
-        width: 400,
-        height: 300,
+        width: size,
+        height: size,
         data: imageUrl,
         dotsOptions: { color: "#000", type: "rounded" },
         cornersSquareOptions: { type: "extra-rounded" },
@@ -169,7 +169,7 @@ export const AppProvider = ({ children }) => {
         imageOptions: {
           crossOrigin: "anonymous",
           margin: 2,
-          imageSize: 0.22,
+          imageSize: 0.3,
         },
       });
 

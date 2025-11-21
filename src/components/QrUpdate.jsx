@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import useAppContext from "../context/useAppContext";
 import { Listbox } from "@headlessui/react";
@@ -10,6 +10,7 @@ import transparent from "../assets/transparent.png";
 import { toast } from "sonner";
 
 const QrUpdate = () => {
+  const qrUpdateRef = useRef(null);
   const {
     handleCopy,
     handleOpenQrUpdate,
@@ -26,16 +27,28 @@ const QrUpdate = () => {
     setOption(event.target.value);
   };
 
-  useEffect(() => {
-    if (qr) {
-      const container = document.getElementById("qr-container-main");
-
-      if (container) {
-        container.innerHTML = "";
-        qr.append(container);
-      }
-    }
-  }, [qr]);
+ useEffect(() => {
+     if(!qr || !qrUpdateRef.current) return;
+ 
+     const container = qrUpdateRef.current;
+ 
+     container.innerHtml = "";
+     qr.append(container);
+ 
+     const observer = new ResizeObserver((entries)=> {
+       const width = entries[0].contentRect.width;
+ 
+       qr.update({
+         width,
+         height: width,
+       });
+     });
+     
+     observer.observe(container);
+ 
+     return () => observer.disconnect();
+   }, [qr])
+ 
 
  const downloadQr = async (size) => {
   if (!qr) return toast.error("QR code not ready yet!");
@@ -205,15 +218,11 @@ const QrUpdate = () => {
               <div className="h-90">
                 {/* {loading && <p>Generating QR Code...</p>} */}
                 {qr && (
-                  <div className="flex items-center justify-center w-full">
+                  <div className="flex items-center justify-center w-full p-1 bg-white rounded-lg">
                     <div
-                      id="qr-container-main"
+                      ref={qrUpdateRef}
                       className="flex items-center justify-center p-2"
-                      style={{
-                        width: "100%",
-                        maxWidth: "320px",
-                        minHeight: "200px",
-                      }}
+                      
                     ></div>
                   </div>
                 )}
