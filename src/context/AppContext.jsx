@@ -162,7 +162,7 @@ export const AppProvider = ({ children }) => {
         width: size,
         height: size,
         data: imageUrl,
-        dotsOptions: { color: "#000", type: "rounded" },
+        dotsOptions: { color: "#000", type: "extra-rounded" },
         cornersSquareOptions: { type: "extra-rounded" },
         cornersDotOptions: { type: "dot" },
         image: tRex,

@@ -54,16 +54,12 @@ const QrUpdate = () => {
   if (!qr) return toast.error("QR code not ready yet!");
 
   try {
-    qr.update({
-      width: size,
-      height: size,
-      backgroundOptions: {
-        color: option === "transparent" ? "rgba(0,0,0,0)" : "#ffffff",
-      },
-    });
+    
 
     setTimeout(() => {
-      qr.download({ extension: "png" });
+      qr.download({ 
+        name: qrData?.name,
+        extension: "png" });
     }, 300);
   } catch (error) {
     console.log("Download failed:", error);
@@ -78,7 +74,7 @@ const QrUpdate = () => {
         <div className="border-b border-gray-200">
           <div className="flex items-center px-5 justify-between py-6 border-b border-gray-200">
             <p className="font-600 font-semibold text-2xl text-gray-900 ">
-              Edit 'Breakfast'
+              Edit '{qrData?.name}'
             </p>
             <div
               onClick={() => handleOpenQrUpdate()}
@@ -201,7 +197,7 @@ const QrUpdate = () => {
                 option === "background" ? qrBg || qr_bg : transparent
               })`,
             }}
-            className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-12 backdrop-blur-lg rounded-md"
+            className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-8 backdrop-blur-lg rounded-md"
           >
             {/* logo should be here */}
             <div className="">
@@ -218,10 +214,10 @@ const QrUpdate = () => {
               <div className="h-90">
                 {/* {loading && <p>Generating QR Code...</p>} */}
                 {qr && (
-                  <div className="flex items-center justify-center w-full p-1 bg-white rounded-lg">
+                  <div className="flex items-center justify-center w-100 h-90 p-1 mt-5 rounded-lg">
                     <div
                       ref={qrUpdateRef}
-                      className="flex items-center justify-center p-2"
+                      className="flex items-center justify-center w-full"
                       
                     ></div>
                   </div>
