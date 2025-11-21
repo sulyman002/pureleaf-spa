@@ -12,9 +12,12 @@ export const AppProvider = ({ children }) => {
   const [createNew, setCreateNew] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const [loginDetails, setLoginDetails] = useState(null);
+
+  // Generic single upload (old one)
   const [uploadFile, setUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("idle");
+
   const [data, setData] = useState(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -35,71 +38,60 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-const [spaStatus, setSpaStatus] = useState("idle");
-const [spaProgress, setSpaProgress] = useState(0);
+  //  MENU UPLOAD STATES 
 
+  const [spaStatus, setSpaStatus] = useState("idle");
+  const [spaProgress, setSpaProgress] = useState(0);
+
+  const [foodStatus, setFoodStatus] = useState("idle");
+  const [foodProgress, setFoodProgress] = useState(0);
+
+  const [drinkStatus, setDrinkStatus] = useState("idle");
+  const [drinkProgress, setDrinkProgress] = useState(0);
+
+  // SHARED UPLOAD SIMULATOR
+
+  const simulateUpload = async (file, setStatus, setProgress) => {
+    if (!file) return;
+    setStatus("uploading");
+    setProgress(0);
+
+  
+    for (let i = 0; i <= 100; i += 5) {
+      await new Promise((r) => setTimeout(r, 150));
+      setProgress(i);
+    }
+
+    setStatus("completed");
+  };
+
+  // INDIVIDUAL MENU UPLOADER
   const uploadSpaToServer = async (file) => {
-    if (!file) return;
-    setSpaStatus("uploading");
-
-    for (let i = 0; i <= 100; i += 5) {
-      await new Promise((r) => setTimeout(r, 150));
-      setSpaProgress(i);
-    }
-
-    setSpaStatus("completed");
+    await simulateUpload(file, setSpaStatus, setSpaProgress);
   };
 
-const [foodStatus, setFoodStatus] = useState("idle");
-const [foodProgress, setFoodProgress] = useState(0);
-
-const uploadFoodToServer = async (file) => {
-    if (!file) return;
-    setFoodStatus("uploading");
-
-    for (let i = 0; i <= 100; i += 5) {
-      await new Promise((r) => setTimeout(r, 150));
-      setFoodProgress(i);
-    }
-
-    setFoodStatus("completed");
+  const uploadFoodToServer = async (file) => {
+    await simulateUpload(file, setFoodStatus, setFoodProgress);
   };
 
-const [drinkStatus, setDrinkStatus] = useState("idle");
-const [drinkProgress, setDrinkProgress] = useState(0);
-
-const uploadDrinkToServer = async (file) => {
-    if (!file) return;
-    setDrinkStatus("uploading");
-
-    for (let i = 0; i <= 100; i += 5) {
-      await new Promise((r) => setTimeout(r, 150));
-      setDrinkProgress(i);
-    }
-
-    setDrinkStatus("completed");
+  const uploadDrinkToServer = async (file) => {
+    await simulateUpload(file, setDrinkStatus, setDrinkProgress);
   };
 
-  // UPLOAD TO SERVER
+
   const uploadToServer = async (file) => {
-    if (!file) return;
-    setUploadStatus("uploading");
-
-    for (let i = 0; i <= 100; i += 5) {
-      await new Promise((r) => setTimeout(r, 150));
-      setUploadProgress(i);
-    }
-
-    setUploadStatus("completed");
+    await simulateUpload(file, setUploadStatus, setUploadProgress);
   };
 
   // MODAL OPENERS
   const handleOpenQr = () => {
-    setOpenQr(!openQr);
+    setOpenQr((prev) => !prev);
   };
+
   const handleOpenQrUpdate = () => {
     setOpenQrUpdate((prev) => !prev);
   };
+
   const handleToggleDeleteModal = () => {
     setOpenDeleteModal((prev) => !prev);
   };
@@ -108,45 +100,45 @@ const uploadDrinkToServer = async (file) => {
     setEdit((prev) => !prev);
   };
 
-  // HANDLE FILEUPLOAD
+  //  FILE INPUT HANDLERS (if used elsewhere) 
+
   const handleFoodFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    uploadFoodToServer(file)
-   
+    uploadFoodToServer(file);
   };
 
   const handleDrinkFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-
-    uploadDrinkToServer(file)
+    uploadDrinkToServer(file);
   };
 
   const handleSpaFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
- 
-    uploadSpaToServer(file)
+
+    uploadSpaToServer(file);
   };
 
-  // const handleFileUpload = (e) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  //   const isPDF = file.type === "application/pdf";
+    const isPDF = file.type === "application/pdf";
 
-  //   if (isPDF) {
-  //     setUploadFile(file);
-  //     uploadToServer(file);
-  //   } else {
-  //     toast.error("Please upload a valid PDF file.");
-  //   }
-  // };
+    if (isPDF) {
+      setUploadFile(file);
+      uploadToServer(file);
+    } else {
+      toast.error("Please upload a valid PDF file.");
+    }
+  };
 
-  // QR-CODE LOGIC
+  // - QR-CODE LOGIC 
+
   const convertToQrCode = async (qrData) => {
     setLoading(true);
     setQr(null);
@@ -157,7 +149,10 @@ const uploadDrinkToServer = async (file) => {
       setLoading(false);
       return;
     }
+
+    // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 2000));
+
     try {
       const qrCode = new QRCodeStyling({
         width: 400,
@@ -167,7 +162,11 @@ const uploadDrinkToServer = async (file) => {
         cornersSquareOptions: { type: "extra-rounded" },
         cornersDotOptions: { type: "dot" },
         image: tRex,
-        imageOptions: { crossOrigin: "anonymous", margin: 2, imageSize: 0.22 },
+        imageOptions: {
+          crossOrigin: "anonymous",
+          margin: 2,
+          imageSize: 0.22,
+        },
       });
 
       setQr(qrCode);
@@ -189,6 +188,8 @@ const uploadDrinkToServer = async (file) => {
     }
   };
 
+  //  STORE 
+
   const store = {
     createNew,
     setCreateNew,
@@ -196,6 +197,7 @@ const uploadDrinkToServer = async (file) => {
     setUserDetails,
     loginDetails,
     setLoginDetails,
+
     setUploadFile,
     uploadFile,
     uploadToServer,
@@ -204,13 +206,17 @@ const uploadDrinkToServer = async (file) => {
     setUploadProgress,
     uploadProgress,
     handleFileUpload,
+
     setData,
     data,
+
     setOpenDeleteModal,
     openDeleteModal,
     handleToggleDeleteModal,
+
     handleOpenEdit,
     edit,
+
     handleOpenQr,
     openQr,
     setQr,
@@ -218,21 +224,45 @@ const uploadDrinkToServer = async (file) => {
     qr,
     loading,
     convertToQrCode,
+
     handleOpenQrUpdate,
     openQrUpdate,
     handleCopy,
+
     setFilterValue,
     filterValue,
     inputValue,
     setInputValue,
+
     logoImg,
+
     toggleExpand,
     setExpanded,
     expanded,
-    // newly added
+
+    // menu upload stuff for CreateMenu/MenuUpload
+    spaStatus,
+    setSpaStatus,
+    spaProgress,
+    setSpaProgress,
+    uploadSpaToServer,
+
+    foodStatus,
+    setFoodStatus,
+    foodProgress,
+    setFoodProgress,
+    uploadFoodToServer,
+
+    drinkStatus,
+    setDrinkStatus,
+    drinkProgress,
+    setDrinkProgress,
+    uploadDrinkToServer,
+
+    // legacy handlers (if you still use them elsewhere)
     handleSpaFile,
     handleDrinkFile,
-    handleFoodFile
+    handleFoodFile,
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;
