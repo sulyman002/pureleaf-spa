@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CloudUpload, File, Trash2, CircleCheck } from "lucide-react";
+import axios from "axios";
 
 const MenuUpload = ({
   label,
@@ -10,7 +11,7 @@ const MenuUpload = ({
   setValue,
   setProgress,
   setStatus,
-  onUpload, 
+  onUpload,
   accept = "application/pdf, image/svg+xml, image/png, image/jpg, image/jpeg, image/gif",
 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -18,7 +19,6 @@ const MenuUpload = ({
   const handleFile = (file) => {
     if (!file) return;
 
-    
     setProgress(0);
     setStatus("uploading");
 
@@ -61,15 +61,34 @@ const MenuUpload = ({
     // Optional: if you support aborting uploads, call abort here.
   };
 
- const displayFile =
-  typeof file === "string"
-    ? {
-        name: "File",
-        size: null,
-        url: file,
-      }
-    : file || null;
+  useEffect(() => {
+    if (typeof file === "string") {
+      axios
+        .head(file)
+        .then((response) => {
+          const oldFileSize = Number(response.headers["content-length"]);
+          const oldFileName = file.oldFile.split("/").pop();
 
+          setGrabOld({
+            name: oldFileName,
+            size: oldFileSize,
+          });
+
+          console.log("File name:", oldFileName);
+          console.log("File size in bytes:", oldFileSize);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [file]);
+
+  const displayFile =
+    typeof file === "string"
+      ? {
+          name: "File",
+          size: null,
+          url: file,
+        }
+      : file || null;
 
   const fileSizeKb =
     displayFile && typeof displayFile.size === "number"
@@ -113,15 +132,11 @@ const MenuUpload = ({
             </div>
 
             <div>
-              {status === "completed" ? (
-                <CircleCheck size={16} className="text-[#5C2E1B]" />
-              ) : (
-                <Trash2
-                  size={20}
-                  className="cursor-pointer text-gray-500 hover:text-red-500 transition"
-                  onClick={handleRemove}
-                />
-              )}
+              <Trash2
+                size={20}
+                className="cursor-pointer text-gray-500 hover:text-red-500 transition"
+                onClick={handleRemove}
+              />
             </div>
           </div>
         </div>
