@@ -49,7 +49,7 @@ const ForgetPassword = () => {
       className="w-full min-h-screen bg-cover flex items-center justify-center"
     >
       <div className="bg-black/50 inset-0 w-full h-screen flex  items-center justify-center">
-        <div className="w-full md:w-[480px] mx-6 md:mx-0 rounded-xl px-10 bg-white py-16 shadow backdrop-blur-sm flex items-center justify-center flex-col gap-8 ">
+        <div className="w-full md:w-[480px] mx-6 md:mx-0 rounded-xl px-8 bg-white py-6 shadow backdrop-blur-sm flex items-center justify-center flex-col gap-8 ">
           <div className="w-full">
             {isSubmitSuccessful ? (
               <div className="flex flex-col w-full gap-6">

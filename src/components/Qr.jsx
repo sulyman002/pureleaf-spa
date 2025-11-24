@@ -1,13 +1,13 @@
-import React, { useRef } from "react";
+// import React, { useRef } from "react";
 // import bar_code from "../assets/bar_code.png";
 import useAppContext from "../context/useAppContext";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import QrUpdate from "../components/QrUpdate.jsx";
-import { useEffect } from "react";
+// import { useEffect } from "react";/
 
 const Qr = () => {
-  const containerRef = useRef(null)
+  // const containerRef = useRef(null)
   const {
     handleOpenQr,
     data: qrData,
@@ -23,27 +23,27 @@ const Qr = () => {
   const link = qrData?.imageUrl;
   const cleanLink = link?.replace(/^https?:\/\//, "");
 
-  useEffect(() => {
-    if(!qr || !containerRef.current) return;
+  // useEffect(() => {
+  //   if(!qr || !containerRef.current) return;
 
-    const container = containerRef.current;
+  //   const container = containerRef.current;
 
-    container.innerHtml = "";
-    qr.append(container);
+  //   container.innerHtml = "";
+  //   qr.append(container);
 
-    const observer = new ResizeObserver((entries)=> {
-      const width = entries[0].contentRect.width;
+  //   const observer = new ResizeObserver((entries)=> {
+  //     const width = entries[0].contentRect.width;
 
-      qr.update({
-        width,
-        height: width,
-      });
-    });
+  //     qr.update({
+  //       width,
+  //       height: width,
+  //     });
+  //   });
     
-    observer.observe(container);
+  //   observer.observe(container);
 
-    return () => observer.disconnect();
-  }, [qr])
+  //   return () => observer.disconnect();
+  // }, [qr])
 
   // useEffect(() => {
   //   if (qr) {
@@ -80,11 +80,12 @@ const Qr = () => {
 
             {qr && !loading && (
               <div className="flex items-center justify-center w-full ">
-                <div
+                <img src={qr} alt="Generated QR Code" style={{ width: "100%",  height: "auto" }}  />
+                {/* <div
                   ref={containerRef}
                   className="flex items-center justify-center  w-full h-full"
                   
-                ></div>
+                ></div> */}
               </div>
             )}
           </div>

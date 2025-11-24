@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import MenuUpload from "./MenuUpload";
 
 const CreateMenu = () => {
-  const { mutate: createData } = useCreateData();
+  const { mutateAsync: createData } = useCreateData();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, watch, setValue } = useForm();
@@ -75,7 +75,7 @@ const CreateMenu = () => {
       if (data.drinkMenuFile) fd.append("drinkMenuFile", data.drinkMenuFile);
       if (data.spaMenuFile) fd.append("spaMenuFile", data.spaMenuFile);
 
-      createData(fd, {
+      await createData(fd, {
         onSuccess: () => {
           toast.success("Menu created");
           setCreateNew(false);
@@ -124,7 +124,7 @@ const CreateMenu = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-8 pt-6 pb-8 px-5"
         >
-          <div className="flex flex-col gap-8 overflow-y-auto h-100 scrollbar-thin scrollbar-right scrollbar-thumb-red-400 scrollbar-track-gray-50 scrollbar-thumb-inset text-gray-100">
+          <div className="flex flex-col gap-8 overflow-y-auto scrollbar-thin h-100 scrollbar-right scrollbar-thumb-red-400 scrollbar-track-gray-50 scrollbar-thumb-inset text-gray-100">
             {/* Menu Name */}
             <div className="flex flex-col gap-3 w-full">
               <label htmlFor="menuName" className="text-base text-[#101828]">
@@ -163,7 +163,7 @@ const CreateMenu = () => {
               </div>
 
               {expanded.includes("restaurant") && (
-                <div className="flex items-center justify-center gap-6">
+                <div className="flex items-center flex-col md:flex-row justify-center gap-6">
                   <MenuUpload
                     label="Food Menu"
                     fieldName="foodMenuFile"
@@ -275,13 +275,14 @@ const CreateMenu = () => {
             <button
               type="submit"
               disabled={isSaveDisabled}
-              className={`w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 ${
-                isSaveDisabled
+              className={
+                "w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-3 px-7 " +
+                (isSaveDisabled || isSubmitting === true
                   ? "cursor-not-allowed bg-[#5C2E1B]/50"
-                  : "bg-[#5C2E1B]"
-              }`}
+                  : "bg-[#5C2E1B]")
+              }
             >
-              {isSubmitting ? "Create Menu..." : "Create Menu"}
+              {isSubmitting ? "Creating Menu..." : "Create Menu"}
             </button>
           </div>
         </form>

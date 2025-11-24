@@ -1,10 +1,10 @@
 // import axios from "axios";
 import { createContext, useState } from "react";
 import { toast } from "sonner";
-// import QRCode from "qrcode";
+import QRCode from "qrcode";
 import QRCodeStyling from "qr-code-styling";
 import logoImg from "../assets/logoImg.png";
-import tRex from "../assets/t-dog-removebg-preview.png";
+// import tRex from "../assets/t-dog-removebg-preview.png";
 
 export const AppContext = createContext({});
 
@@ -39,7 +39,7 @@ export const AppProvider = ({ children }) => {
     );
   };
 
-  //  MENU UPLOAD STATES 
+  //  MENU UPLOAD STATES
 
   const [spaStatus, setSpaStatus] = useState("idle");
   const [spaProgress, setSpaProgress] = useState(0);
@@ -57,7 +57,6 @@ export const AppProvider = ({ children }) => {
     setStatus("uploading");
     setProgress(0);
 
-  
     for (let i = 0; i <= 100; i += 5) {
       await new Promise((r) => setTimeout(r, 150));
       setProgress(i);
@@ -78,7 +77,6 @@ export const AppProvider = ({ children }) => {
   const uploadDrinkToServer = async (file) => {
     await simulateUpload(file, setDrinkStatus, setDrinkProgress);
   };
-
 
   const uploadToServer = async (file) => {
     await simulateUpload(file, setUploadStatus, setUploadProgress);
@@ -101,10 +99,10 @@ export const AppProvider = ({ children }) => {
     setEdit(!edit);
   };
   const handleOpenPreview = () => {
-    setPreview(!preview)
-  }
+    setPreview(!preview);
+  };
 
-  //  FILE INPUT HANDLERS (if used elsewhere) 
+  //  FILE INPUT HANDLERS (if used elsewhere)
 
   const handleFoodFile = (e) => {
     const file = e.target.files?.[0];
@@ -141,49 +139,73 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // - QR-CODE LOGIC 
+  // - QR-CODE LOGIC
 
-  const convertToQrCode = async (qrData, size = 20) => {
+  // const convertToQrCode = async (qrData, size = 20) => {
+  //   setLoading(true);
+  //   setQr(null);
+
+  //   const imageUrl = qrData?.imageUrl || qrData;
+  //   if (!imageUrl) {
+  //     toast.error("Invalid QR data");
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   // Fake delay
+  //   await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  //   try {
+  //     const qrCode = new QRCodeStyling({
+  //       width: size,
+  //       height: size,
+  //       data: imageUrl,
+  //       dotsOptions: { color: "#000", type: "extra-rounded" },
+  //       cornersSquareOptions: { type: "extra-rounded" },
+  //       cornersDotOptions: { type: "dot" },
+  //       image: tRex,
+  //       imageOptions: {
+  //         crossOrigin: "anonymous",
+  //         margin: 2,
+  //         imageSize: 0.3,
+  //       },
+  //     });
+
+  //     setQr(qrCode);
+  //   } catch (error) {
+  //     console.log("Error generating QR:", error);
+  //     toast.error("Error generating QR");
+  //   }
+
+  //   setLoading(false);
+  // };
+
+  const generateQrCode = async (url) => {
+    const dataUrl = url?.reviewUrl;
+    if (!dataUrl) return toast.error("Please provide a URL");
+
     setLoading(true);
-    setQr(null);
-
-    const imageUrl = qrData?.imageUrl || qrData;
-    if (!imageUrl) {
-      toast.error("Invalid QR data");
-      setLoading(false);
-      return;
-    }
-
-    // Fake delay
     await new Promise((resolve) => setTimeout(resolve, 2000));
-
     try {
-      const qrCode = new QRCodeStyling({
-        width: size,
-        height: size,
-        data: imageUrl,
-        dotsOptions: { color: "#000", type: "extra-rounded" },
-        cornersSquareOptions: { type: "extra-rounded" },
-        cornersDotOptions: { type: "dot" },
-        image: tRex,
-        imageOptions: {
-          crossOrigin: "anonymous",
-          margin: 2,
-          imageSize: 0.3,
+      const qrDataUrl = await QRCode.toDataURL(dataUrl, {
+        width: 300,
+        margin: 2,
+        color: {
+          dark: "#000000",
+          light: "#ffffff",
         },
       });
-
-      setQr(qrCode);
-    } catch (error) {
-      console.log("Error generating QR:", error);
-      toast.error("Error generating QR");
+      setQr(qrDataUrl);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate QR code");
     }
 
     setLoading(false);
   };
 
   const handleCopy = async (qrData) => {
-    const imageUrl = qrData?.imageUrl || qrData;
+    const imageUrl = qrData?.reviewUrl || qrData;
     try {
       await navigator.clipboard.writeText(imageUrl);
       console.log("Copied!");
@@ -192,7 +214,7 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  //  STORE 
+  //  STORE
 
   const store = {
     createNew,
@@ -230,7 +252,7 @@ export const AppProvider = ({ children }) => {
     setLoading,
     qr,
     loading,
-    convertToQrCode,
+    // convertToQrCode,
 
     handleOpenQrUpdate,
     openQrUpdate,
@@ -270,6 +292,8 @@ export const AppProvider = ({ children }) => {
     handleSpaFile,
     handleDrinkFile,
     handleFoodFile,
+
+    generateQrCode,
   };
 
   return <AppContext.Provider value={store}>{children}</AppContext.Provider>;

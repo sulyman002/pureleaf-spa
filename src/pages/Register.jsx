@@ -84,21 +84,24 @@ const Register = () => {
       className="w-full min-h-screen bg-cover  "
     >
       <div className="bg-black/50 inset-0 w-full h-screen flex  items-center justify-center">
-        <div className="w-full md:w-[480px] gap-8 mx-6 md:mx-0 rounded-xl px-10 bg-white py-16 shadow backdrop-blur-sm flex items-center justify-center flex-col ">
+        <div className="w-full md:w-[480px] gap-4 mx-6 md:mx-0 rounded-xl px-8 bg-white pb-6 pt-4 shadow backdrop-blur-sm flex items-center justify-center flex-col ">
           <form
             noValidate
             onSubmit={handleSubmit(onSubmit)}
-            className="w-full flex flex-col gap-5"
+            className="w-full flex flex-col gap-3"
           >
             {/* company logo */}
-            <div className="flex items-center justify-center">
-              <img src={logoImg} alt="pureleaf-spa-logo" className="w-45" />
+            <div className="flex flex-col w-full">
+              <div className="flex items-center justify-center">
+                <img src={logoImg} alt="pureleaf-spa-logo" className="w-40 " />
+              </div>
+
+              <h3 className="text-center font-600 font-semibold text-[30px] gray-900 ">
+                {loginState === "Sign Up" ? "Sign Up" : "Welcome Back!"}
+              </h3>
             </div>
-            <h3 className="text-center font-600 font-semi text-[30px] gray-900 ">
-              {loginState === "Sign Up" ? "Sign Up" : "Welcome Back!"}
-            </h3>
             {/* fills */}
-            <div className="flex flex-col gap-6 w-full">
+            <div className="flex flex-col gap-4 w-full">
               {loginState === "Sign Up" && (
                 <div className="flex flex-col gap-2 ">
                   <label htmlFor="name">Name</label>
@@ -178,7 +181,7 @@ const Register = () => {
                 </p>
               )}
             </div>
-            <div className="flex flex-col w-full gap-4 mt-6">
+            <div className="flex flex-col w-full gap-4 mt-2">
               <button
                 disabled={isSubmitting}
                 type="submit"

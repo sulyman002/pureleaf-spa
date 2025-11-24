@@ -1,16 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { X } from "lucide-react";
 import useAppContext from "../context/useAppContext";
 import { Listbox } from "@headlessui/react";
 import { resolution } from "../data/data";
 import { ChevronDown } from "lucide-react";
 import qr_bg from "../assets/qr_bg.jpg";
-import transparent from "../assets/transparent.png";
+// import transparent from "../assets/transparent.png";
 // import bar_code from "../assets/bar_code.png";
 import { toast } from "sonner";
+import * as htmlToImage from "html-to-image";
 
 const QrUpdate = () => {
-  const qrUpdateRef = useRef(null);
+  // const qrUpdateRef = useRef(null);
+  const exportRef = useRef(null);
+
   const {
     handleCopy,
     handleOpenQrUpdate,
@@ -27,50 +30,34 @@ const QrUpdate = () => {
     setOption(event.target.value);
   };
 
- useEffect(() => {
-     if(!qr || !qrUpdateRef.current) return;
- 
-     const container = qrUpdateRef.current;
- 
-     container.innerHtml = "";
-     qr.append(container);
- 
-     const observer = new ResizeObserver((entries)=> {
-       const width = entries[0].contentRect.width;
- 
-       qr.update({
-         width,
-         height: width,
-       });
-     });
-     
-     observer.observe(container);
- 
-     return () => observer.disconnect();
-   }, [qr])
- 
 
- const downloadQr = async (size) => {
-  if (!qr) return toast.error("QR code not ready yet!");
 
-  try {
-    
+  const downloadQr = async () => {
+    if (!qr) return toast.error("QR code not ready yet!");
 
-    setTimeout(() => {
-      qr.download({ 
-        name: qrData?.name,
-        extension: "png" });
-    }, 300);
-  } catch (error) {
-    console.log("Download failed:", error);
-    toast.error("Failed to download QR");
-  }
-};
+    try {
+      
 
+      setTimeout(async () => {
+        const node = exportRef.current;
+        if (!node) return;
+
+        const dataUrl = await htmlToImage.toPng(node, { cacheBust: true });
+
+        const link = document.createElement("a");
+        link.download = `${qrData?.name || "qrCode"}.png`;
+        link.href = dataUrl;
+        link.click();
+      }, 300);
+    } catch (error) {
+      console.log("Download failed:", error);
+      toast.error("Failed to download QR");
+    }
+  };
 
   return (
-    <div className="fixed flex items-center justify-center z-99 inset-0 bg-[#34405499]/60 backdrop-blur-[2px]">
-      <div className="bg-white rounded-xl w-[800px] flex flex-col gap-2   py-8">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#34405499]/60 backdrop-blur-[2px] flex items-start md:items-center justify-center p-4">
+      <div className="bg-white rounded-xl w-full md:w-[800px] max-h-[90vh] overflow-y-auto flex flex-col gap-2 py-8 px-4">
         <div className="border-b border-gray-200">
           <div className="flex items-center px-5 justify-between py-6 border-b border-gray-200">
             <p className="font-600 font-semibold text-2xl text-gray-900 ">
@@ -109,12 +96,12 @@ const QrUpdate = () => {
                     type="file"
                     id="changeImage"
                     className="hidden"
+                    accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       setQrBg(file ? URL.createObjectURL(file) : null);
                     }}
                   />
-                 
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -165,7 +152,7 @@ const QrUpdate = () => {
               <div className="flex items-center flex-col w-full gap-3">
                 <button
                   onClick={() => {
-                    const numericSize = parseInt(select.value); 
+                    const numericSize = parseInt(select.value);
                     downloadQr(numericSize);
                   }}
                   className="cursor-pointer w-full text-base font-semibold text-white flex items-center justify-center rounded-lg py-2.5 px-4.5 bg-[#5C2E1B] shadow-xs"
@@ -192,9 +179,10 @@ const QrUpdate = () => {
           </div>
 
           <div
+            ref={exportRef}
             style={{
               backgroundImage: `url(${
-                option === "background" ? qrBg || qr_bg : transparent
+                option === "background" ? qrBg || qr_bg : ""
               })`,
             }}
             className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-8 backdrop-blur-lg rounded-md"
@@ -204,22 +192,30 @@ const QrUpdate = () => {
               <img src={logoImg} alt="logo-image" className="w-45" />
             </div>
             <p
-              className={`font-600 font-semibold text-2xl ${
+              className={`font-600 font-semibold text-lg md:text-2xl ${
                 option === "transparent" ? "text-gray-900" : "text-white"
               } `}
             >
-              Scan for Breakfast Menu
+              Scan for {qrData?.name}
             </p>
             <div className="mt-4">
               <div className="h-90">
                 {/* {loading && <p>Generating QR Code...</p>} */}
                 {qr && (
                   <div className="flex items-center justify-center w-100 h-90 p-1 mt-5 rounded-lg">
-                    <div
+                    <img
+                      src={qr}
+                      alt="Generated QR Code"
+                      style={{
+                        width: "100%",
+                        maxWidth: "250px",
+                        height: "auto",
+                      }}
+                    />
+                    {/* <div
                       ref={qrUpdateRef}
                       className="flex items-center justify-center w-full"
-                      
-                    ></div>
+                    ></div> */}
                   </div>
                 )}
               </div>

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CloudUpload, File, Trash2, CircleCheck } from "lucide-react";
-import axios from "axios";
+// import axios from "axios";
 
 const MenuUpload = ({
   label,
   fieldName,
   file,
   progress,
-  status,
+  // status,
   setValue,
   setProgress,
   setStatus,
@@ -58,28 +58,10 @@ const MenuUpload = ({
     setProgress(0);
     setStatus("idle");
     setValue(fieldName, null, { shouldDirty: true, shouldValidate: true });
-    // Optional: if you support aborting uploads, call abort here.
+    
   };
 
-  useEffect(() => {
-    if (typeof file === "string") {
-      axios
-        .head(file)
-        .then((response) => {
-          const oldFileSize = Number(response.headers["content-length"]);
-          const oldFileName = file.oldFile.split("/").pop();
 
-          setGrabOld({
-            name: oldFileName,
-            size: oldFileSize,
-          });
-
-          console.log("File name:", oldFileName);
-          console.log("File size in bytes:", oldFileSize);
-        })
-        .catch((err) => console.error(err));
-    }
-  }, [file]);
 
   const displayFile =
     typeof file === "string"

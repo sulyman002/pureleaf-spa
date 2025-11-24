@@ -11,15 +11,22 @@ import { useAuthProfile } from "../services/pureLeafRequest.js";
 const AdminSidebar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const {data: profileData} = useAuthProfile();
+  const { data: profileData } = useAuthProfile();
   console.log(profileData?.businessProfile.logoUrl);
   const profilePics = profileData?.businessProfile.logoUrl;
+  const businessName = profileData?.businessProfile.businessName || "Business Name";
+  const grabFirstLetter = businessName.split(" ");
+
+const firstLetters = grabFirstLetter.map((item) => item.slice(0, 1));
+const companyName = firstLetters.join("").toUpperCase();
+  console.log(firstLetters);
   
+
 
   const location = useLocation();
   const text = user ? user.email : "";
   // console.log(user);
-  
+
   const position = text.indexOf("@");
 
   const shortText =
@@ -38,7 +45,7 @@ const AdminSidebar = () => {
     document.addEventListener("mousedown", handleCLickOutside);
 
     return () => {
-      document.removeEventListener("mousedown", handleCLickOutside)
+      document.removeEventListener("mousedown", handleCLickOutside);
     };
   }, []);
 
@@ -50,12 +57,15 @@ const AdminSidebar = () => {
       <div className="flex-1 flex flex-col pt-8 px-5 gap-6">
         <div className="flex items-center gap-4.5 ">
           <p className="flex items-center justify-center bg-[#F0ECEB] rounded-full w-10 h-10 text-base font-500 text-center text-[#5C2E1B] font-medium  ">
-            CE
+            {companyName}
           </p>
           <div className="flex flex-col gap-2 text-xs ">
             <p className="text-[#667085] ">Name of software here</p>
-            <div onClick={() => navigate("/admin/settings/profile")} className="cursor-pointer gap-1 flex items-center text-sm font-500 text-gray-900 ">
-              <span>Clear Essence</span>
+            <div
+              onClick={() => navigate("/admin/settings/profile")}
+              className="cursor-pointer gap-1 flex items-center text-sm font-500 text-gray-900 "
+            >
+              <span>{businessName}</span>
               <SquarePen size={11.74} className="text-gray-900" />
             </div>
           </div>
@@ -113,7 +123,10 @@ const AdminSidebar = () => {
           <Icons.EllipsisVertical size={20} className="text-gray-600" />
 
           {useMenu && (
-            <div ref={modalRef} className="px-5 gap-3 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 ">
+            <div
+              ref={modalRef}
+              className="px-5 gap-3 absolute flex flex-col left-full bottom-0 ml-3 w-64 bg-white shadow-lg rounded-lg z-999 p-4 "
+            >
               <div className="flex ">
                 <div className="flex-1 flex items-center gap-3 ">
                   <img
@@ -124,7 +137,9 @@ const AdminSidebar = () => {
                     className="rounded-full"
                   />
                   <div className="flex flex-col gap-2 text-[14px] ">
-                    <p className="text-[#404652] font-500 ">{profileData?.name}</p>
+                    <p className="text-[#404652] font-500 ">
+                      {profileData?.name}
+                    </p>
                     <p className="text-[#404652] font-400 ">{shortText}</p>
                   </div>
                 </div>
