@@ -56,8 +56,8 @@ const QrUpdate = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#34405499]/60 backdrop-blur-[2px] flex items-start md:items-center justify-center p-4">
-      <div className="bg-white rounded-xl w-full md:w-[800px] max-h-[90vh] overflow-y-auto flex flex-col gap-2 py-8 px-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-[#34405499]/60 backdrop-blur-[2px] flex items-start md:items-center justify-center p-4">
+      <div className="bg-white rounded-xl w-full md:w-[800px] overflow-x-hidden max-h-[90vh] overflow-y-auto flex flex-col gap-2 py-8 ">
         <div className="border-b border-gray-200">
           <div className="flex items-center px-5 justify-between py-6 border-b border-gray-200">
             <p className="font-600 font-semibold text-2xl text-gray-900 ">
@@ -185,7 +185,7 @@ const QrUpdate = () => {
                 option === "background" ? qrBg || qr_bg : ""
               })`,
             }}
-            className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-8 backdrop-blur-lg rounded-md"
+            className="flex-1 flex-col h-full w-full bg-cover flex items-center justify-center py-8 px-0 md:px-8 backdrop-blur-lg rounded-md"
           >
             {/* logo should be here */}
             <div className="">
